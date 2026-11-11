@@ -1,0 +1,104 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum ReservationStatus {
+  PENDING
+  CONFIRMED
+  CANCELLED
+  COMPLETED
+}
+
+enum PaymentStatus {
+  UNPAID
+  PENDING
+  PAID
+  FAILED
+  REFUNDED
+}
+
+enum AdminRole {
+  OWNER
+  ADMIN
+  STAFF
+}
+
+model Vehicle {
+  id           String        @id @default(cuid())
+  slug         String        @unique
+  name         String
+  category     String
+  year         Int
+  seats        Int
+  doors        Int
+  transmission String
+  fuel         String
+  imageUrls    String[]
+  dailyAED     Int
+  weeklyAED    Int
+  monthlyAED   Int
+  isDemo       Boolean       @default(true)
+  isActive     Boolean       @default(false)
+  reservations Reservation[]
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+
+  @@index([isActive, isDemo])
+}
+
+model Reservation {
+  id               String            @id @default(cuid())
+  reference        String            @unique
+  vehicleId        String
+  vehicle          Vehicle           @relation(fields: [vehicleId], references: [id])
+  fullName         String
+  email            String
+  phone            String
+  pickupAt         DateTime
+  returnAt         DateTime
+  message          String?           @db.Text
+  estimatedAED     Int
+  status           ReservationStatus @default(PENDING)
+  isDemo           Boolean           @default(true)
+  payment          Payment?
+  createdAt        DateTime          @default(now())
+  updatedAt        DateTime          @updatedAt
+
+  @@index([vehicleId, pickupAt, returnAt, status])
+  @@index([status, createdAt])
+}
+
+model Payment {
+  id                String        @id @default(cuid())
+  reservationId     String        @unique
+  reservation       Reservation   @relation(fields: [reservationId], references: [id])
+  stripeSessionId   String?       @unique
+  stripePaymentId   String?       @unique
+  amountAED         Int
+  currency          String        @default("aed")
+  status            PaymentStatus @default(UNPAID)
+  isTest            Boolean       @default(true)
+  createdAt         DateTime      @default(now())
+  updatedAt         DateTime      @updatedAt
+}
+
+model StripeEvent {
+  id          String   @id
+  type        String
+  processedAt DateTime @default(now())
+}
+
+model AdminUser {
+  id           String    @id @default(cuid())
+  email        String    @unique
+  passwordHash String
+  role         AdminRole @default(STAFF)
+  active       Boolean   @default(true)
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+}
