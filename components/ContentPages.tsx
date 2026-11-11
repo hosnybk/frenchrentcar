@@ -8,26 +8,41 @@ import { Locale, translate } from "@/lib/translations";
 import { vehicles } from "@/lib/vehicles";
 import { vehicleCategory } from "@/lib/vehicle-copy";
 
-type StoredRequest = {
-  reference: string;
-  fullName: string;
-  email: string;
-  phone: string;
-  vehicle: string;
-  pickupDate: string;
-  returnDate: string;
-  pickupTime: string;
-  returnTime: string;
-  message: string;
-  status: "Pending";
-  demo: true;
-  createdAt: string;
-};
-
 function makeReference() {
   const stamp = new Date().toISOString().slice(2, 10).replaceAll("-", "");
   const suffix = Math.random().toString(36).slice(2, 6).toUpperCase();
-  return `FRC-D-${stamp}-${suffix}`;
+  return `FRC-${stamp}-${suffix}`;
+}
+
+/** Builds a WhatsApp link with a prefilled message (falls back to e-mail). */
+function buildMessageUrl(text: string) {
+  const number = company.whatsappNumber.replace(/\D/g, "");
+  if (number) return `https://wa.me/${number}?text=${encodeURIComponent(text)}`;
+  if (company.email.includes("@")) {
+    return `mailto:${company.email}?subject=${encodeURIComponent("French Rent Car")}&body=${encodeURIComponent(text)}`;
+  }
+  return "";
+}
+
+function openMessageUrl(url: string) {
+  const opened = window.open(url, "_blank");
+  if (opened) {
+    opened.opener = null;
+  } else {
+    window.location.href = url;
+  }
+}
+
+function messageUnavailable(locale: Locale) {
+  return locale === "fr"
+    ? "Le contact WhatsApp n’est pas configuré. Merci de nous écrire depuis la page Contact."
+    : locale === "ar"
+      ? "لم يتم إعداد واتساب. يرجى مراسلتنا من صفحة الاتصال."
+      : "WhatsApp contact is not configured. Please reach us from the Contact page.";
+}
+
+function vehicleLabel(locale: Locale) {
+  return locale === "fr" ? "Véhicule" : locale === "ar" ? "السيارة" : "Vehicle";
 }
 
 function estimatedRentalTotal(days: number, rates: { daily: number; weekly: number; monthly: number }) {
@@ -74,6 +89,7 @@ export function BookingPage({
   initialReturnTime?: string;
 }) {
   const [complete, setComplete] = useState("");
+  const [messageUrl, setMessageUrl] = useState("");
   const [error, setError] = useState("");
   const selectedVehicle = vehicles.find((car) => car.slug === initialVehicle);
   const [pickupDate, setPickupDate] = useState(initialPickupDate);
@@ -118,36 +134,30 @@ export function BookingPage({
       return;
     }
     const reference = makeReference();
-    const request: StoredRequest = {
-      reference,
-      fullName: String(form.get("fullName")),
-      email: String(form.get("email")),
-      phone: String(form.get("phone")),
-      vehicle: String(form.get("vehicle")),
-      pickupDate: requestedPickupDate,
-      returnDate: requestedReturnDate,
-      pickupTime: requestedPickupTime,
-      returnTime: requestedReturnTime,
-      message: String(form.get("message")),
-      status: "Pending",
-      demo: true,
-      createdAt: new Date().toISOString(),
-    };
-    try {
-      const current = JSON.parse(localStorage.getItem("frc-demo-requests") || "[]");
-      const requests = Array.isArray(current) ? current : [];
-      localStorage.setItem("frc-demo-requests", JSON.stringify([...requests, request]));
-      setComplete(reference);
-      event.currentTarget.reset();
-    } catch {
-      setError(
-        locale === "fr"
-          ? "Le navigateur n’a pas pu enregistrer la demande. Réessayez."
-          : locale === "ar"
-            ? "تعذر حفظ الطلب في المتصفح. يرجى المحاولة مرة أخرى."
-            : "Your browser could not save this enquiry. Please try again.",
-      );
+    const vehicleSlug = String(form.get("vehicle"));
+    const vehicleName = vehicles.find((car) => car.slug === vehicleSlug)?.name ?? vehicleSlug;
+    const note = String(form.get("message") ?? "").trim();
+    const text = [
+      `French Rent Car · ${translate(locale, "requestBooking")}`,
+      `${translate(locale, "requestRef")}: ${reference}`,
+      `${translate(locale, "fullName")}: ${String(form.get("fullName")).trim()}`,
+      `${translate(locale, "email")}: ${String(form.get("email")).trim()}`,
+      `${translate(locale, "phoneLabel")}: ${String(form.get("phone")).trim()}`,
+      `${vehicleLabel(locale)}: ${vehicleName}`,
+      `${translate(locale, "pickupDate")}: ${requestedPickupDate} ${requestedPickupTime}`,
+      `${translate(locale, "returnDate")}: ${requestedReturnDate} ${requestedReturnTime}`,
+      note ? `${translate(locale, "message")}: ${note}` : "",
+    ]
+      .filter(Boolean)
+      .join("\n");
+    const url = buildMessageUrl(text);
+    if (!url) {
+      setError(messageUnavailable(locale));
+      return;
     }
+    openMessageUrl(url);
+    setMessageUrl(url);
+    setComplete(reference);
   }
 
   return (
@@ -165,7 +175,9 @@ export function BookingPage({
               <span className="eyebrow">{translate(locale, "pending")}</span>
               <h2>{translate(locale, "requestSuccess")}</h2>
               <p>{translate(locale, "requestRef")}: <strong>{complete}</strong></p>
+              <p>{translate(locale, "contactAlternative")}</p>
               <p>{translate(locale, "pendingNotice")}</p>
+              <a className="text-link" href={messageUrl} target="_blank" rel="noreferrer">{translate(locale, "whatsappRetry")} ↗</a>
               <a className="text-link" href={`/${locale}/cars`}>{translate(locale, "viewAllCars")} ↗</a>
             </div>
           ) : (
@@ -293,37 +305,34 @@ export function BookingPage({
 
 export function ContactPage({ locale }: { locale: Locale }) {
   const [sent, setSent] = useState(false);
+  const [messageUrl, setMessageUrl] = useState("");
   const [error, setError] = useState("");
 
   function submit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
+    setError("");
     const form = new FormData(event.currentTarget);
-    const item = {
-      name: String(form.get("name")),
-      email: String(form.get("email")),
-      phone: String(form.get("phone")),
-      subject: String(form.get("subject")),
-      message: String(form.get("message")),
-      demo: true,
-      createdAt: new Date().toISOString(),
-    };
-    try {
-      const current = JSON.parse(localStorage.getItem("frc-demo-messages") || "[]");
-      localStorage.setItem(
-        "frc-demo-messages",
-        JSON.stringify([...(Array.isArray(current) ? current : []), item]),
-      );
-      setSent(true);
-      event.currentTarget.reset();
-    } catch {
-      setError(
-        locale === "fr"
-          ? "Le navigateur n’a pas pu enregistrer votre message."
-          : locale === "ar"
-            ? "تعذر حفظ الرسالة في المتصفح."
-            : "Your browser could not save this message.",
-      );
+    const phone = String(form.get("phone") ?? "").trim();
+    const text = [
+      `French Rent Car · ${translate(locale, "navContact")}`,
+      `${translate(locale, "fullName")}: ${String(form.get("name")).trim()}`,
+      `${translate(locale, "email")}: ${String(form.get("email")).trim()}`,
+      phone ? `${translate(locale, "phoneLabel")}: ${phone}` : "",
+      `${translate(locale, "subject")}: ${String(form.get("subject")).trim()}`,
+      "",
+      String(form.get("message")).trim(),
+    ]
+      .filter((line, index) => line !== "" || index === 5)
+      .join("\n");
+    const url = buildMessageUrl(text);
+    if (!url) {
+      setError(messageUnavailable(locale));
+      return;
     }
+    openMessageUrl(url);
+    setMessageUrl(url);
+    setSent(true);
+    event.currentTarget.reset();
   }
 
   const mapReady = Boolean(company.mapsEmbedUrl);
@@ -346,6 +355,7 @@ export function ContactPage({ locale }: { locale: Locale }) {
               <span className="success-icon">✓</span>
               <h2>{translate(locale, "messageSuccess")}</h2>
               <p>{translate(locale, "contactAlternative")}</p>
+              <a className="text-link" href={messageUrl} target="_blank" rel="noreferrer">{translate(locale, "whatsappRetry")} ↗</a>
               <button className="text-link" type="button" onClick={() => setSent(false)}>
                 {locale === "fr" ? "Envoyer un autre message" : locale === "ar" ? "إرسال رسالة أخرى" : "Send another message"}
               </button>

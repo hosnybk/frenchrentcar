@@ -111,8 +111,8 @@ export const dictionary = {
     email: "Email address",
     phoneLabel: "Phone number",
     message: "Additional message",
-    sendRequest: "Send rental request",
-    requestSuccess: "Enquiry saved on this device",
+    sendRequest: "Send request via WhatsApp",
+    requestSuccess: "Your request is ready in WhatsApp",
     requestRef: "Your reference",
     pendingNotice:
       "This is a pending request only. No vehicle is reserved and no payment has been taken.",
@@ -120,10 +120,11 @@ export const dictionary = {
     contactIntro:
       "Have a question or a particular car in mind? Send us a note and we'll be in touch.",
     subject: "Subject",
-    sendMessage: "Send message",
-    messageSuccess: "Your message has been saved on this device.",
+    sendMessage: "Send via WhatsApp",
+    messageSuccess: "Your message is ready in WhatsApp.",
     contactAlternative:
-      "Online messaging is not connected yet. You can use the contact details once they have been confirmed.",
+      "Your message opens in WhatsApp. Tap Send there so our team receives it.",
+    whatsappRetry: "WhatsApp did not open? Click here",
     directions: "Open Google Maps",
     mapPending: "Map embed will appear when a verified embed link is configured.",
     aboutTitlePage: "A better way to experience Dubai.",
@@ -273,8 +274,8 @@ export const dictionary = {
     email: "Adresse e-mail",
     phoneLabel: "Téléphone",
     message: "Message complémentaire",
-    sendRequest: "Envoyer une demande",
-    requestSuccess: "Demande enregistrée sur cet appareil",
+    sendRequest: "Envoyer la demande via WhatsApp",
+    requestSuccess: "Votre demande est prête dans WhatsApp",
     requestRef: "Votre référence",
     pendingNotice:
       "Cette demande est en attente. Aucun véhicule n’est réservé et aucun paiement n’a été effectué.",
@@ -282,10 +283,11 @@ export const dictionary = {
     contactIntro:
       "Une question ou un modèle en tête ? Écrivez-nous, nous reviendrons vers vous.",
     subject: "Objet",
-    sendMessage: "Envoyer le message",
-    messageSuccess: "Votre message a été enregistré sur cet appareil.",
+    sendMessage: "Envoyer via WhatsApp",
+    messageSuccess: "Votre message est prêt dans WhatsApp.",
     contactAlternative:
-      "La messagerie en ligne n’est pas encore connectée. Les coordonnées seront affichées une fois confirmées.",
+      "Votre message s’ouvre dans WhatsApp. Appuyez sur Envoyer pour que notre équipe le reçoive.",
+    whatsappRetry: "WhatsApp ne s’est pas ouvert ? Cliquez ici",
     directions: "Ouvrir Google Maps",
     mapPending: "La carte apparaîtra lorsqu’un lien d’intégration vérifié sera configuré.",
     aboutTitlePage: "Dubaï, en toute sérénité.",
@@ -435,8 +437,8 @@ export const dictionary = {
     email: "البريد الإلكتروني",
     phoneLabel: "رقم الهاتف",
     message: "رسالة إضافية",
-    sendRequest: "إرسال طلب التأجير",
-    requestSuccess: "تم حفظ الطلب على هذا الجهاز",
+    sendRequest: "إرسال الطلب عبر واتساب",
+    requestSuccess: "طلبك جاهز في واتساب",
     requestRef: "الرقم المرجعي",
     pendingNotice:
       "هذا الطلب قيد الانتظار فقط. لم يتم حجز أي سيارة ولم يتم استلام أي دفعة.",
@@ -444,10 +446,11 @@ export const dictionary = {
     contactIntro:
       "هل لديك سؤال أو سيارة محددة؟ أرسل لنا رسالة وسنتواصل معك.",
     subject: "الموضوع",
-    sendMessage: "إرسال الرسالة",
-    messageSuccess: "تم حفظ رسالتك على هذا الجهاز.",
+    sendMessage: "إرسال عبر واتساب",
+    messageSuccess: "رسالتك جاهزة في واتساب.",
     contactAlternative:
-      "المراسلة عبر الإنترنت غير مفعّلة حالياً. ستظهر بيانات الاتصال بعد تأكيدها.",
+      "ستُفتح رسالتك في واتساب. اضغط على إرسال ليصل طلبك إلى فريقنا.",
+    whatsappRetry: "لم يُفتح واتساب؟ اضغط هنا",
     directions: "افتح خرائط Google",
     mapPending: "ستظهر الخريطة عند إضافة رابط تضمين موثوق.",
     aboutTitlePage: "اكتشف دبي براحة واطمئنان.",
