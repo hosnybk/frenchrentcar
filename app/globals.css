@@ -2943,3 +2943,78 @@ img {
   gap: 10px;
   margin-top: 14px;
 }
+
+/* ---------- Payment link ---------- */
+.pay-page {
+  min-height: 60vh;
+  padding-block: 60px 90px;
+}
+
+.pay-page h1 {
+  margin: 10px 0 24px;
+  font-size: 34px;
+}
+
+.pay-card {
+  max-width: 640px;
+  padding: 22px;
+  border: 1px solid var(--line);
+  background: var(--white);
+}
+
+.pay-image {
+  width: 100%;
+  height: auto;
+  margin-block-end: 16px;
+}
+
+.pay-card dl {
+  display: grid;
+  gap: 10px;
+  margin: 0 0 18px;
+}
+
+.pay-card dl div {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  padding-block-end: 8px;
+  border-block-end: 1px solid var(--line);
+}
+
+.pay-card dt {
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.pay-card dd {
+  margin: 0;
+  font-size: 14px;
+  text-align: end;
+}
+
+.pay-total dd {
+  font-size: 20px;
+  font-weight: 700;
+}
+
+.pay-note {
+  margin: 12px 0 0;
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1.6;
+}
+
+.admin-paylink {
+  display: grid;
+  gap: 8px;
+  margin-top: 14px;
+  padding: 12px;
+  background: var(--paper);
+  font-size: 13px;
+}
+
+.admin-paylink code {
+  overflow-wrap: anywhere;
+  font-size: 12px;
+}

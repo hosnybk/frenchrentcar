@@ -1,6 +1,6 @@
 import Stripe from "stripe";
 import { prisma } from "@/lib/prisma";
-import { getTestStripe } from "@/lib/stripe";
+import { getStripe } from "@/lib/stripe";
 
 function isUniqueConstraint(error: unknown) {
   return (
@@ -20,7 +20,7 @@ export async function POST(request: Request) {
 
   let event: Stripe.Event;
   try {
-    const stripe = getTestStripe();
+    const { stripe } = getStripe();
     const body = await request.text();
     event = stripe.webhooks.constructEvent(body, signature, signingSecret);
   } catch {
@@ -47,7 +47,8 @@ export async function POST(request: Request) {
         where: { id: paymentId },
         include: { reservation: true },
       });
-      if (!payment || !payment.isTest || payment.reservation.isDemo) {
+      // A test-mode event can only settle a test payment, and a live event a live payment.
+      if (!payment || payment.isTest === event.livemode || payment.reservation.isDemo) {
         throw new Error("PAYMENT_REFERENCE_INVALID");
       }
 

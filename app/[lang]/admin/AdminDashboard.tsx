@@ -1,6 +1,19 @@
+import { headers } from "next/headers";
 import { prisma } from "@/lib/prisma";
 import type { AdminIdentity } from "@/lib/admin/session";
+import { payLink, siteOrigin } from "@/lib/payments";
 import { logoutAction, updateReservationStatus } from "./actions";
+
+function paymentMessage(locale: string, reference: string, vehicle: string, amount: number, link: string) {
+  const total = `${amount.toLocaleString("en-US")} AED`;
+  if (locale === "ar") {
+    return `French Rent Car: تم تأكيد حجزك ${reference} (${vehicle}). المبلغ: ${total}. للدفع بأمان عبر Stripe: ${link}`;
+  }
+  if (locale === "en") {
+    return `French Rent Car: your booking ${reference} (${vehicle}) is confirmed. Amount: ${total}. Pay securely with Stripe: ${link}`;
+  }
+  return `French Rent Car : votre réservation ${reference} (${vehicle}) est confirmée. Montant : ${total}. Paiement sécurisé par Stripe : ${link}`;
+}
 
 const FILTERS = [
   ["PENDING", "En attente"],
@@ -100,6 +113,7 @@ export default async function AdminDashboard({
       : (counts.find((c) => c.status === value)?._count ?? 0);
 
   const message = noticeText(notice);
+  const origin = siteOrigin((await headers()).get("host"));
 
   return (
     <section className="page-wrap admin-dashboard">
@@ -169,6 +183,31 @@ export default async function AdminDashboard({
                     Dates en conflit avec : {conflicts.map((c) => `${c.reference} (${STATUS_LABEL[c.status]})`).join(", ")}
                   </p>
                 )}
+                {r.status === "CONFIRMED" && r.payToken && r.payment?.status !== "PAID" && (() => {
+                  const link = payLink(origin, r.locale, r.reference, r.payToken);
+                  const text = paymentMessage(r.locale, r.reference, r.vehicle.name, r.estimatedAED, link);
+                  return (
+                    <div className="admin-paylink">
+                      <span>Lien de paiement à envoyer au client :</span>
+                      <code>{link}</code>
+                      <div className="admin-actions">
+                        {phoneDigits.length >= 6 && (
+                          <a
+                            className="button button-red button-small"
+                            href={`https://wa.me/${phoneDigits}?text=${encodeURIComponent(text)}`}
+                            target="_blank"
+                            rel="noreferrer"
+                          >
+                            Envoyer au client par WhatsApp
+                          </a>
+                        )}
+                        <a className="button button-outline button-small" href={link} target="_blank" rel="noreferrer">
+                          Ouvrir la page de paiement
+                        </a>
+                      </div>
+                    </div>
+                  );
+                })()}
                 {(r.status === "PENDING" || r.status === "CONFIRMED") && (
                   <form action={updateReservationStatus} className="admin-actions">
                     <input type="hidden" name="lang" value={lang} />

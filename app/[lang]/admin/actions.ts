@@ -4,6 +4,7 @@ import { redirect } from "next/navigation";
 import { z } from "zod";
 import { prisma } from "@/lib/prisma";
 import { getAdmin, login, logout } from "@/lib/admin/session";
+import { newPayToken } from "@/lib/payments";
 
 const langSchema = z.enum(["en", "fr", "ar"]).catch("fr");
 const statusFilterSchema = z.enum(["PENDING", "CONFIRMED", "CANCELLED", "COMPLETED", "ALL"]).catch("PENDING");
@@ -68,7 +69,10 @@ export async function updateReservationStatus(formData: FormData) {
       select: { reference: true },
     });
     if (conflict) back(`conflict_${conflict.reference}`);
-    await prisma.reservation.update({ where: { id }, data: { status: "CONFIRMED" } });
+    await prisma.reservation.update({
+      where: { id },
+      data: { status: "CONFIRMED", confirmedAt: new Date(), payToken: reservation!.payToken ?? newPayToken() },
+    });
     back("confirmed");
   }
 

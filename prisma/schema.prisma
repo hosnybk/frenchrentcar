@@ -73,6 +73,9 @@ model Reservation {
   locale           String            @default("en")
   /// SHA-256 of the visitor IP (anti-abuse rate limiting only).
   clientIpHash     String?
+  /// Secret token of the customer payment link, created when staff confirm the request.
+  payToken         String?           @unique
+  confirmedAt      DateTime?
   payment          Payment?
   createdAt        DateTime          @default(now())
   updatedAt        DateTime          @updatedAt

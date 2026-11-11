@@ -2,20 +2,17 @@ import Stripe from "stripe";
 
 let stripeClient: Stripe | undefined;
 
-export function getTestStripe() {
+/**
+ * Returns the Stripe client. Test keys (sk_test_) work out of the box; a live key
+ * (sk_live_) is only accepted when STRIPE_MODE=LIVE is set explicitly.
+ */
+export function getStripe() {
   const secretKey = process.env.STRIPE_SECRET_KEY ?? "";
-  const publishableKey = process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY ?? "";
-  const isTestOnly =
-    process.env.STRIPE_MODE === "TEST" &&
-    process.env.DEMO_DATA === "false" &&
-    process.env.ALLOW_TEST_PAYMENTS === "true" &&
-    secretKey.startsWith("sk_test_") &&
-    publishableKey.startsWith("pk_test_");
-
-  if (!isTestOnly) {
-    throw new Error("TEST_CHECKOUT_NOT_CONFIGURED");
+  const isTest = secretKey.startsWith("sk_test_");
+  const isLive = secretKey.startsWith("sk_live_") && process.env.STRIPE_MODE === "LIVE";
+  if (!isTest && !isLive) {
+    throw new Error("STRIPE_NOT_CONFIGURED");
   }
-
   stripeClient ??= new Stripe(secretKey);
-  return stripeClient;
+  return { stripe: stripeClient, livemode: isLive };
 }
