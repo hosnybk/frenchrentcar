@@ -17,4 +17,6 @@ const env = { ...process.env, DATABASE_URL: url, DATABASE_URL_UNPOOLED: direct }
 console.log("[db-deploy] Applying migrations…");
 execSync("npx prisma migrate deploy", { stdio: "inherit", env });
 console.log("[db-deploy] Syncing vehicles…");
-execSync("node --no-warnings prisma/seed.mjs", { stdio: "inherit", env });
+// Use the direct (non-pooled) connection for the bulk upsert: the PgBouncer pooler
+// can close the connection during long series of queries (P1017).
+execSync("node --no-warnings prisma/seed.mjs", { stdio: "inherit", env: { ...env, DATABASE_URL: direct } });
