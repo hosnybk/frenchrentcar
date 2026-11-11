@@ -236,7 +236,6 @@ export const termsFr: LegalDocument = {
       items: [
         "Un montant de 5 AED est facturé pour chaque passage Salik.",
         "Les tarifs des péages Salik peuvent être modifiés sans préavis.",
-        "Une TVA de 5 % s’applique aux frais de service de {company}.",
       ],
     },
     {
@@ -244,7 +243,6 @@ export const termsFr: LegalDocument = {
       items: [
         "Le locataire supporte toutes les amendes commises pendant la période de location.",
         "Les amendes inférieures à 200 AED entraînent des frais de service d’au moins 20 AED.",
-        "Une taxe sur la valeur ajoutée de 5 % s’applique aux frais de service.",
       ],
     },
     {
@@ -328,7 +326,7 @@ export const termsFr: LegalDocument = {
     {
       subheading: "Prix",
       paragraphs: [
-        "Votre devis final de {company} inclut : tous les frais obligatoires, la taxe sur la valeur ajoutée et toute autre taxe applicable par les autorités gouvernementales, les kilomètres inclus, l’assurance responsabilité civile collision et l’assurance contre le vol.",
+        "Votre devis final de {company} inclut : tous les frais obligatoires, toute taxe applicable par les autorités gouvernementales, les kilomètres inclus, l’assurance responsabilité civile collision et l’assurance contre le vol.",
       ],
     },
     {
