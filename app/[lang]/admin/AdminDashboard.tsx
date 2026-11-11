@@ -2,7 +2,8 @@ import { headers } from "next/headers";
 import { prisma } from "@/lib/prisma";
 import type { AdminIdentity } from "@/lib/admin/session";
 import { payLink, siteOrigin } from "@/lib/payments";
-import { logoutAction, updateReservationStatus } from "./actions";
+import { refundQuote } from "@/lib/cancellation";
+import { logoutAction, refundReservation, updateReservationStatus } from "./actions";
 
 function paymentMessage(locale: string, reference: string, vehicle: string, amount: number, link: string) {
   const total = `${amount.toLocaleString("en-US")} AED`;
@@ -36,6 +37,7 @@ const PAYMENT_LABEL: Record<string, string> = {
   PENDING: "Paiement en cours",
   PAID: "Payée",
   FAILED: "Paiement échoué",
+  PARTIALLY_REFUNDED: "Remboursée en partie",
   REFUNDED: "Remboursée",
 };
 
@@ -49,7 +51,13 @@ function noticeText(notice?: string) {
     cancelled: { ok: true, text: "Réservation annulée." },
     not_pending: { ok: false, text: "Seule une réservation en attente peut être confirmée." },
     not_cancellable: { ok: false, text: "Cette réservation ne peut pas être annulée." },
-    paid_refund_first: { ok: false, text: "Réservation payée : remboursez-la avant de l’annuler." },
+    paid_refund_first: { ok: false, text: "Réservation payée : utilisez « Annuler et rembourser »." },
+    refunded: { ok: true, text: "Réservation annulée et remboursement envoyé à Stripe (5 à 10 jours ouvrés pour le client)." },
+    cancelled_no_refund: { ok: true, text: "Réservation annulée sans remboursement, selon la politique d’annulation." },
+    not_refundable: { ok: false, text: "Seule une réservation confirmée et payée peut être remboursée." },
+    refund_failed: { ok: false, text: "Le remboursement a échoué chez Stripe. Rien n’a été modifié : vérifiez le paiement dans Stripe puis réessayez." },
+    stripe_unavailable: { ok: false, text: "Stripe n’est pas configuré sur le serveur." },
+    stripe_mode_mismatch: { ok: false, text: "Ce paiement a été fait dans un autre mode Stripe (test / réel) que la clé actuelle." },
     not_found: { ok: false, text: "Réservation introuvable." },
     invalid: { ok: false, text: "Action invalide." },
   };
@@ -84,7 +92,7 @@ export default async function AdminDashboard({
     take: 200,
     include: {
       vehicle: { select: { name: true, slug: true } },
-      payment: { select: { status: true } },
+      payment: { select: { status: true, amountAED: true, refundedAED: true, refundedAt: true } },
     },
   });
 
@@ -208,7 +216,42 @@ export default async function AdminDashboard({
                     </div>
                   );
                 })()}
-                {(r.status === "PENDING" || r.status === "CONFIRMED") && (
+                {r.payment && r.payment.refundedAED > 0 && (
+                  <p className="admin-message">
+                    Remboursé : {r.payment.refundedAED.toLocaleString("fr-FR")} AED sur {r.payment.amountAED.toLocaleString("fr-FR")} AED
+                    {r.payment.refundedAt ? ` (le ${dubai.format(r.payment.refundedAt)})` : ""}
+                  </p>
+                )}
+                {r.status === "CONFIRMED" && r.payment?.status === "PAID" && (() => {
+                  const q = refundQuote(r, r.payment.amountAED);
+                  const fmt = (n: number) => `${n.toLocaleString("fr-FR")} AED`;
+                  const ruleText =
+                    q.rule === "FULL"
+                      ? `Départ dans ${Math.floor(q.hoursBeforePickup)} h (≥ 48 h) : remboursement intégral.`
+                      : q.rule === "LATE"
+                        ? `Départ dans ${Math.floor(q.hoursBeforePickup)} h (< 48 h) : une journée retenue (${fmt(q.withheldAED)}).`
+                        : "Heure de départ dépassée (non-présentation) : aucun remboursement.";
+                  return (
+                    <form action={refundReservation} className="admin-paylink">
+                      <input type="hidden" name="lang" value={lang} />
+                      <input type="hidden" name="filter" value={filter} />
+                      <input type="hidden" name="id" value={r.id} />
+                      <span>Annulation selon la politique — {ruleText}</span>
+                      <span>Payé : {fmt(q.paidAED)} · À rembourser : <strong>{fmt(q.refundAED)}</strong></span>
+                      <div className="admin-actions">
+                        <button type="submit" name="mode" value="policy" className="button button-red button-small">
+                          {q.refundAED > 0 ? `Annuler et rembourser ${fmt(q.refundAED)}` : "Annuler sans remboursement"}
+                        </button>
+                        {q.refundAED < q.paidAED && (
+                          <button type="submit" name="mode" value="full" className="button button-outline button-small">
+                            Annuler et tout rembourser ({fmt(q.paidAED)}) — exception
+                          </button>
+                        )}
+                      </div>
+                    </form>
+                  );
+                })()}
+                {(r.status === "PENDING" || (r.status === "CONFIRMED" && r.payment?.status !== "PAID")) && (
                   <form action={updateReservationStatus} className="admin-actions">
                     <input type="hidden" name="lang" value={lang} />
                     <input type="hidden" name="filter" value={filter} />

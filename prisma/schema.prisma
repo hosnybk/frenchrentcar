@@ -21,6 +21,7 @@ enum PaymentStatus {
   PENDING
   PAID
   FAILED
+  PARTIALLY_REFUNDED
   REFUNDED
 }
 
@@ -96,6 +97,10 @@ model Payment {
   currency          String        @default("aed")
   status            PaymentStatus @default(UNPAID)
   isTest            Boolean       @default(true)
+  /// Amount refunded to the customer through Stripe (0 = nothing refunded).
+  refundedAED       Int           @default(0)
+  stripeRefundId    String?       @unique
+  refundedAt        DateTime?
   createdAt         DateTime      @default(now())
   updatedAt         DateTime      @updatedAt
 }
