@@ -355,7 +355,7 @@ export function BookingPage({
           <div className="payment-unavailable">
             <span className="eyebrow">{translate(locale, "paymentTitle")}</span>
             <p>{translate(locale, "paymentDisabled")}</p>
-            <span className="status-chip">{locale === "fr" ? "PAIEMENT INACTIF" : locale === "ar" ? "الدفع غير مفعّل" : "PAYMENTS DISABLED"}</span>
+            <span className="status-chip">{locale === "fr" ? "PAIEMENT APRÈS CONFIRMATION" : locale === "ar" ? "الدفع بعد التأكيد" : "PAYMENT AFTER CONFIRMATION"}</span>
           </div>
         </aside>
       </section>

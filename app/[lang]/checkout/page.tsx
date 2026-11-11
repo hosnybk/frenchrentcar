@@ -10,7 +10,7 @@ export default async function Checkout({ params }: { params: Promise<{ lang: str
       <span className="eyebrow">FRENCH RENT CAR / DUBAI</span>
       <h1>{translate(locale, "paymentTitle")}</h1>
       <p>{paymentNotAvailable}</p>
-      <span className="status-chip">ONLINE PAYMENT NOT AVAILABLE</span>
+      <span className="status-chip">{locale === "fr" ? "PAIEMENT APRÈS CONFIRMATION" : locale === "ar" ? "الدفع بعد التأكيد" : "PAYMENT AFTER CONFIRMATION"}</span>
       <a className="text-link" href={`/${locale}/booking`}>{translate(locale, "requestBooking")} ↗</a>
     </section>
   );

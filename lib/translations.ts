@@ -148,9 +148,9 @@ export const dictionary = {
       "Flexible rental options, a considered range of vehicles and professional service, shaped around your time in Dubai.",
     serviceNote:
       "Airport collection and vehicle delivery are not currently confirmed services.",
-    paymentTitle: "Secure payment",
+    paymentTitle: "Secure payment by Stripe",
     paymentDisabled:
-      "Online payments are not enabled yet. Send a rental enquiry instead.",
+      "Once our team has confirmed availability, you receive a secure Stripe payment link on WhatsApp. No payment is taken when you send your request.",
     termsTitle: "Terms & conditions",
     legalTitle: "Legal notice",
     privacyTitle: "Privacy policy",
@@ -313,9 +313,9 @@ export const dictionary = {
       "Des formules flexibles, une sélection de véhicules de qualité et un service professionnel, selon votre séjour à Dubaï.",
     serviceNote:
       "La livraison du véhicule et la prise en charge à l’aéroport ne sont pas des services confirmés à ce jour.",
-    paymentTitle: "Paiement sécurisé",
+    paymentTitle: "Paiement sécurisé par Stripe",
     paymentDisabled:
-      "Les paiements en ligne ne sont pas encore activés. Envoyez plutôt une demande de location.",
+      "Après confirmation de la disponibilité par notre équipe, vous recevez sur WhatsApp un lien de paiement sécurisé Stripe. Aucun paiement n’est demandé à l’envoi de la demande.",
     termsTitle: "Conditions générales",
     legalTitle: "Mentions légales",
     privacyTitle: "Politique de confidentialité",
@@ -477,9 +477,9 @@ export const dictionary = {
     servicesIntro:
       "خيارات مرنة ومجموعة سيارات مختارة وخدمة احترافية تناسب مدة إقامتك في دبي.",
     serviceNote: "خدمات توصيل السيارة والاستلام من المطار غير مؤكدة حالياً.",
-    paymentTitle: "دفع آمن",
+    paymentTitle: "دفع آمن عبر Stripe",
     paymentDisabled:
-      "الدفع عبر الإنترنت غير مفعّل حالياً. أرسل طلب تأجير بدلاً من ذلك.",
+      "بعد تأكيد فريقنا للتوافر، ستتلقى عبر واتساب رابط دفع آمن عبر Stripe. لا يُطلب أي دفع عند إرسال الطلب.",
     termsTitle: "الشروط والأحكام",
     legalTitle: "إشعار قانوني",
     privacyTitle: "سياسة الخصوصية",
