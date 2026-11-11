@@ -6,6 +6,7 @@ const globalForPrisma = globalThis as unknown as {
 
 // On Vercel the Neon integration was connected with the "FRC" prefix, so the
 // connection string is exposed as FRC_DATABASE_URL. Locally it is DATABASE_URL.
+// Prisma reads env("DATABASE_URL") from the schema; datasourceUrl below overrides it.
 // Neon's pooled endpoint ("-pooler" host) runs PgBouncer: Prisma needs pgbouncer=true there,
 // otherwise long series of queries can fail with P1017 "Server has closed the connection".
 function withPgbouncer(raw?: string) {
@@ -21,7 +22,9 @@ function withPgbouncer(raw?: string) {
   }
 }
 
-const datasourceUrl = withPgbouncer(process.env.DATABASE_URL || process.env.FRC_DATABASE_URL);
+// FRC_DATABASE_URL (Neon) takes priority: another storage integration on the Vercel
+// project also exposes a DATABASE_URL that must not be used.
+const datasourceUrl = withPgbouncer(process.env.FRC_DATABASE_URL || process.env.DATABASE_URL);
 
 export const prisma =
   globalForPrisma.prisma ??
