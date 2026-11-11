@@ -100,7 +100,9 @@ export async function startCheckout(formData: FormData) {
     await prisma.payment.update({ where: { id: payment.id }, data: { stripeSessionId: session.id } });
     checkoutUrl = session.url;
   } catch (error) {
-    console.error("[checkout] Stripe error", error instanceof Error ? error.name : "unknown");
+    // Stripe errors are all named "Error": log their type/code/status (no secrets, no personal data).
+    const e = error as { type?: string; code?: string; statusCode?: number; constructor?: { name?: string } };
+    console.error("[checkout] Stripe error", e?.type ?? e?.constructor?.name ?? "unknown", e?.code ?? "", e?.statusCode ?? "");
   }
   if (!checkoutUrl) redirect(`${payPage}&error=unavailable`);
   redirect(checkoutUrl);
