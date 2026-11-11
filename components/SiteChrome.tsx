@@ -80,6 +80,10 @@ export function SiteHeader({ locale }: { locale: Locale }) {
 }
 
 export function SiteFooter({ locale }: { locale: Locale }) {
+  const whatsappNumber = company.whatsappNumber.replace(/\D/g, "");
+  const hasAddress = company.address.trim() !== "" && company.address !== "TO_BE_CONFIRMED";
+  const hasEmail = company.email.includes("@");
+
   return (
     <footer className="site-footer">
       <div className="footer-main">
@@ -105,11 +109,21 @@ export function SiteFooter({ locale }: { locale: Locale }) {
         </div>
         <div className="footer-column footer-contact">
           <h3>{translate(locale, "footerContact")}</h3>
+          {hasAddress && <span dir="auto">{company.address}</span>}
+          {whatsappNumber && (
+            <a href={`https://wa.me/${whatsappNumber}`} target="_blank" rel="noreferrer">
+              WhatsApp <span dir="ltr">+{whatsappNumber}</span> ↗
+            </a>
+          )}
           <a href={`/${locale}/contact`}>{translate(locale, "navContact")} ↗</a>
           <a href={company.mapsShareUrl} target="_blank" rel="noreferrer">
             {translate(locale, "directions")} ↗
           </a>
-          <span>{translate(locale, "emailUnavailable")}</span>
+          {hasEmail ? (
+            <a href={`mailto:${company.email}`} dir="ltr">{company.email}</a>
+          ) : (
+            <span>{translate(locale, "emailUnavailable")}</span>
+          )}
         </div>
       </div>
       <div className="footer-bottom">
