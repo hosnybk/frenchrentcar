@@ -3,16 +3,14 @@
 import Image from "next/image";
 import { useMemo, useState } from "react";
 import { Locale, translate } from "@/lib/translations";
-import { vehicles, VehicleCategory } from "@/lib/vehicles";
-import { vehicleCategory } from "@/lib/vehicle-copy";
+import { vehicles } from "@/lib/vehicles";
+import { categoryOrder, vehicleCategory } from "@/lib/vehicle-copy";
 
-const categoryValues: VehicleCategory[] = [
-  "Economy",
-  "Sedan",
-  "SUV",
-  "Luxury",
-  "Sports",
-];
+const priceLimits = [500, 1_000, 2_000, 5_000];
+
+function maxPriceLabel(locale: Locale) {
+  return locale === "fr" ? "Prix max / jour" : locale === "ar" ? "السعر الأقصى / يوم" : "Max price / day";
+}
 
 export function VehicleCard({
   locale,
@@ -40,7 +38,8 @@ export function VehicleCard({
       <div className="car-card-info">
         <div>
           <span className="car-category">
-            {vehicleCategory(locale, vehicle.category)} · {vehicle.year}
+            {vehicleCategory(locale, vehicle.category)}
+            {vehicle.year ? ` · ${vehicle.year}` : ""}
           </span>
           <h3>{vehicle.name}</h3>
         </div>
@@ -50,8 +49,9 @@ export function VehicleCard({
         </div>
       </div>
       <div className="car-card-meta">
-        <span>♧ &nbsp;{vehicle.seats} {translate(locale, "seats").toLowerCase()}</span>
-        <span>◌ &nbsp;{translate(locale, "automatic")}</span>
+        {vehicle.seats ? (
+          <span>♧ &nbsp;{vehicle.seats} {translate(locale, "seats").toLowerCase()}</span>
+        ) : null}
         <a href={`/${locale}/cars/${vehicle.slug}`}>{translate(locale, "viewDetails")} ↗</a>
       </div>
       <div className="availability-label">
@@ -72,23 +72,21 @@ export default function CarsCatalog({
   searchSummary?: string;
 }) {
   const [category, setCategory] = useState(startingCategory);
-  const [seats, setSeats] = useState("");
-  const [maxPrice, setMaxPrice] = useState(2_000);
+  const [maxPrice, setMaxPrice] = useState("");
   const [sort, setSort] = useState("popular");
 
   const filtered = useMemo(() => {
     const result = vehicles.filter((vehicle) => {
       return (
-        (!category || vehicle.category === category) &&
-        (!seats || vehicle.seats >= Number(seats)) &&
-        vehicle.daily <= maxPrice
+        (!category || vehicle.categories.some((value) => value === category)) &&
+        (!maxPrice || vehicle.daily <= Number(maxPrice))
       );
     });
     if (sort === "low") result.sort((a, b) => a.daily - b.daily);
     if (sort === "high") result.sort((a, b) => b.daily - a.daily);
     if (sort === "popular") result.sort((a, b) => a.popular - b.popular);
     return result;
-  }, [category, seats, maxPrice, sort]);
+  }, [category, maxPrice, sort]);
 
   return (
     <>
@@ -112,31 +110,19 @@ export default function CarsCatalog({
               <span>{translate(locale, "category")}</span>
               <select value={category} onChange={(e) => setCategory(e.target.value)}>
                 <option value="">{translate(locale, "allCategories")}</option>
-                {categoryValues.map((value) => (
+                {categoryOrder.map((value) => (
                   <option value={value} key={value}>{vehicleCategory(locale, value)}</option>
                 ))}
               </select>
             </label>
             <label>
-              <span>{translate(locale, "seats")}</span>
-              <select value={seats} onChange={(e) => setSeats(e.target.value)}>
+              <span>{maxPriceLabel(locale)}</span>
+              <select value={maxPrice} onChange={(e) => setMaxPrice(e.target.value)}>
                 <option value="">—</option>
-                <option value="2">2+</option>
-                <option value="4">4+</option>
-                <option value="5">5+</option>
-                <option value="7">7+</option>
+                {priceLimits.map((limit) => (
+                  <option value={limit} key={limit}>≤ {limit.toLocaleString(locale)} AED</option>
+                ))}
               </select>
-            </label>
-            <label className="price-range">
-              <span>{translate(locale, "filter")} · AED {maxPrice.toLocaleString(locale)}</span>
-              <input
-                type="range"
-                min="200"
-                max="2000"
-                step="50"
-                value={maxPrice}
-                onChange={(e) => setMaxPrice(Number(e.target.value))}
-              />
             </label>
           </div>
           <label className="sort-control">

@@ -8,6 +8,7 @@ const categories: Record<Locale, Record<VehicleCategory, string>> = {
     SUV: "SUV",
     Luxury: "Luxury",
     Sports: "Sports car",
+    Van: "Van",
   },
   fr: {
     Economy: "Économique",
@@ -15,6 +16,7 @@ const categories: Record<Locale, Record<VehicleCategory, string>> = {
     SUV: "SUV",
     Luxury: "Luxe",
     Sports: "Sportive",
+    Van: "Van",
   },
   ar: {
     Economy: "اقتصادية",
@@ -22,8 +24,11 @@ const categories: Record<Locale, Record<VehicleCategory, string>> = {
     SUV: "دفع رباعي",
     Luxury: "فاخرة",
     Sports: "رياضية",
+    Van: "فان",
   },
 };
+
+export const categoryOrder: VehicleCategory[] = ["Economy", "Sedan", "SUV", "Luxury", "Sports", "Van"];
 
 const featureLabels: Record<Locale, Record<string, string>> = {
   en: {
@@ -86,6 +91,7 @@ const descriptions: Record<Locale, Record<VehicleCategory, string>> = {
     SUV: "Room to bring everyone along, with an elevated view across the city.",
     Luxury: "Sculpted grand-touring lines and effortless comfort, imagined for the open road.",
     Sports: "A spirited coupe made for memorable arrivals and an engaging city drive.",
+    Van: "A spacious people carrier for families, groups and airport transfers.",
   },
   fr: {
     Economy: "Une citadine facile à vivre, avec un habitacle pratique et un confort appréciable au quotidien.",
@@ -93,6 +99,7 @@ const descriptions: Record<Locale, Record<VehicleCategory, string>> = {
     SUV: "De l’espace pour voyager ensemble et une vue dégagée sur la ville.",
     Luxury: "Une silhouette de grand tourisme et un confort remarquable pour prendre la route.",
     Sports: "Un coupé dynamique pour des arrivées mémorables et une conduite engageante.",
+    Van: "Un véhicule spacieux pour les familles, les groupes et les transferts.",
   },
   ar: {
     Economy: "سيارة مدينة عملية ومريحة للاستخدام اليومي.",
@@ -100,6 +107,7 @@ const descriptions: Record<Locale, Record<VehicleCategory, string>> = {
     SUV: "مساحة واسعة للجميع وإطلالة مرتفعة على المدينة.",
     Luxury: "تصميم أنيق وراحة فائقة للرحلات الطويلة.",
     Sports: "سيارة كوبيه رياضية لوصول مميز وتجربة قيادة ممتعة.",
+    Van: "مركبة واسعة للعائلات والمجموعات والتنقلات.",
   },
 };
 
@@ -112,5 +120,5 @@ export function vehicleDescription(locale: Locale, vehicle: Vehicle) {
 }
 
 export function vehicleFeatures(locale: Locale, vehicle: Vehicle) {
-  return vehicle.features.map((feature) => featureLabels[locale][feature] ?? feature);
+  return (vehicle.features ?? []).map((feature) => featureLabels[locale][feature] ?? feature);
 }

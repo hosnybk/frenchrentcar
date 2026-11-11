@@ -6,6 +6,7 @@ import { FormEvent, useState } from "react";
 import { company } from "@/config/company";
 import { Locale, translate } from "@/lib/translations";
 import { vehicles } from "@/lib/vehicles";
+import { categoryOrder, vehicleCategory } from "@/lib/vehicle-copy";
 
 const serviceKeys = ["daily", "monthly", "yearly", "luxury", "categories"] as const;
 const serviceBodyKeys = [
@@ -16,7 +17,6 @@ const serviceBodyKeys = [
   "categoriesBody",
 ] as const;
 
-const categories = ["Economy", "Sedan", "SUV", "Luxury", "Sports"];
 
 function ContactButton({
   locale,
@@ -126,9 +126,9 @@ function BookingSearch({ locale }: { locale: Locale }) {
           <span>{translate(locale, "category")}</span>
           <select name="category" defaultValue="">
             <option value="">{translate(locale, "allCategories")}</option>
-            {categories.map((category) => (
+            {categoryOrder.map((category) => (
               <option key={category} value={category}>
-                {category}
+                {vehicleCategory(locale, category)}
               </option>
             ))}
           </select>
@@ -229,7 +229,10 @@ export default function HomePage({ locale }: { locale: Locale }) {
               </a>
               <div className="car-card-info">
                 <div>
-                  <span className="car-category">{car.category} · {car.year}</span>
+                  <span className="car-category">
+                    {vehicleCategory(locale, car.category)}
+                    {car.year ? ` · ${car.year}` : ""}
+                  </span>
                   <h3>{car.name}</h3>
                 </div>
                 <div className="card-price">
@@ -238,8 +241,9 @@ export default function HomePage({ locale }: { locale: Locale }) {
                 </div>
               </div>
               <div className="car-card-meta">
-                <span>♧ &nbsp;{car.seats} {translate(locale, "seats").toLowerCase()}</span>
-                <span>◌ &nbsp;{translate(locale, "automatic")}</span>
+                {car.seats ? (
+                  <span>♧ &nbsp;{car.seats} {translate(locale, "seats").toLowerCase()}</span>
+                ) : null}
                 <a href={`/${locale}/cars/${car.slug}`}>{translate(locale, "viewDetails")} ↗</a>
               </div>
             </article>

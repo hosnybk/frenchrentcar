@@ -9,15 +9,17 @@ import { Vehicle } from "@/lib/vehicles";
 import { vehicleCategory, vehicleDescription, vehicleFeatures } from "@/lib/vehicle-copy";
 
 function priceFor(vehicle: Vehicle, days: number) {
+  const weekly = vehicle.weekly ?? vehicle.daily * 7;
+  const monthly = vehicle.monthly ?? vehicle.daily * 30;
   if (days >= 30) {
     const months = Math.floor(days / 30);
     const remainingDays = days % 30;
-    return months * vehicle.monthly + Math.ceil(remainingDays / 7) * vehicle.weekly;
+    return months * monthly + Math.floor(remainingDays / 7) * weekly + (remainingDays % 7) * vehicle.daily;
   }
   if (days >= 7) {
     const weeks = Math.floor(days / 7);
     const remainingDays = days % 7;
-    return weeks * vehicle.weekly + remainingDays * vehicle.daily;
+    return weeks * weekly + remainingDays * vehicle.daily;
   }
   return days * vehicle.daily;
 }
@@ -72,7 +74,10 @@ export default function VehicleDetail({
             <span className="image-caption">FRENCH RENT CAR · DUBAI</span>
           </div>
           <div className="gallery-caption">
-            <span>{vehicleCategory(locale, vehicle.category)} · {vehicle.year}</span>
+            <span>
+              {vehicleCategory(locale, vehicle.category)}
+              {vehicle.year ? ` · ${vehicle.year}` : ""}
+            </span>
             <span>{translate(locale, "availabilityDemo")}</span>
           </div>
           <div className="detail-description">
@@ -82,22 +87,28 @@ export default function VehicleDetail({
           <div className="spec-block">
             <h2>{translate(locale, "specs")}</h2>
             <div className="spec-grid">
-              <div><span>{translate(locale, "seats")}</span><strong>{vehicle.seats}</strong></div>
-              <div><span>{locale === "fr" ? "Portes" : locale === "ar" ? "الأبواب" : "Doors"}</span><strong>{vehicle.doors}</strong></div>
-              <div><span>{translate(locale, "transmission")}</span><strong>{translate(locale, "automatic")}</strong></div>
-              <div><span>{translate(locale, "fuel")}</span><strong>{translate(locale, "petrol")}</strong></div>
-              <div><span>{locale === "fr" ? "Climatisation" : locale === "ar" ? "تكييف" : "Air conditioning"}</span><strong>{locale === "ar" ? "نعم" : locale === "fr" ? "Oui" : "Yes"}</strong></div>
-              <div><span>{locale === "fr" ? "Kilométrage" : locale === "ar" ? "المسافة المقطوعة" : "Mileage"}</span><strong>{translate(locale, "unlimitedMileage")}</strong></div>
+              <div><span>{translate(locale, "category")}</span><strong>{vehicleCategory(locale, vehicle.category)}</strong></div>
+              {vehicle.year ? (
+                <div><span>{locale === "fr" ? "Année" : locale === "ar" ? "السنة" : "Year"}</span><strong>{vehicle.year}</strong></div>
+              ) : null}
+              {vehicle.seats ? (
+                <div><span>{translate(locale, "seats")}</span><strong>{vehicle.seats}</strong></div>
+              ) : null}
+              {vehicle.doors ? (
+                <div><span>{locale === "fr" ? "Portes" : locale === "ar" ? "الأبواب" : "Doors"}</span><strong>{vehicle.doors}</strong></div>
+              ) : null}
             </div>
           </div>
-          <div className="spec-block">
-            <h2>{translate(locale, "features")}</h2>
-            <div className="feature-list">
-              {vehicleFeatures(locale, vehicle).map((feature) => (
-                <span key={feature}><i>+</i>{feature}</span>
-              ))}
+          {vehicleFeatures(locale, vehicle).length > 0 && (
+            <div className="spec-block">
+              <h2>{translate(locale, "features")}</h2>
+              <div className="feature-list">
+                {vehicleFeatures(locale, vehicle).map((feature) => (
+                  <span key={feature}><i>+</i>{feature}</span>
+                ))}
+              </div>
             </div>
-          </div>
+          )}
         </div>
         <aside className="booking-card">
           <div className="booking-card-head">
@@ -109,8 +120,12 @@ export default function VehicleDetail({
           </div>
           <div className="price-table">
             <div><span>{translate(locale, "dailyRate")}</span><strong>{vehicle.daily.toLocaleString(locale)} <small>AED</small></strong></div>
-            <div><span>{translate(locale, "weeklyRate")}</span><strong>{vehicle.weekly.toLocaleString(locale)} <small>AED</small></strong></div>
-            <div><span>{translate(locale, "monthlyRate")}</span><strong>{vehicle.monthly.toLocaleString(locale)} <small>AED</small></strong></div>
+            {vehicle.weekly ? (
+              <div><span>{translate(locale, "weeklyRate")}</span><strong>{vehicle.weekly.toLocaleString(locale)} <small>AED</small></strong></div>
+            ) : null}
+            {vehicle.monthly ? (
+              <div><span>{translate(locale, "monthlyRate")}</span><strong>{vehicle.monthly.toLocaleString(locale)} <small>AED</small></strong></div>
+            ) : null}
           </div>
           <div className="estimate-inputs">
             <label>

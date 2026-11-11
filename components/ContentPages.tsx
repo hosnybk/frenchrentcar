@@ -45,12 +45,15 @@ function vehicleLabel(locale: Locale) {
   return locale === "fr" ? "Véhicule" : locale === "ar" ? "السيارة" : "Vehicle";
 }
 
-function estimatedRentalTotal(days: number, rates: { daily: number; weekly: number; monthly: number }) {
+function estimatedRentalTotal(days: number, rates: { daily: number; weekly?: number; monthly?: number }) {
+  const weekly = rates.weekly ?? rates.daily * 7;
+  const monthly = rates.monthly ?? rates.daily * 30;
   if (days >= 30) {
-    return Math.floor(days / 30) * rates.monthly + Math.ceil((days % 30) / 7) * rates.weekly;
+    const rest = days % 30;
+    return Math.floor(days / 30) * monthly + Math.floor(rest / 7) * weekly + (rest % 7) * rates.daily;
   }
   if (days >= 7) {
-    return Math.floor(days / 7) * rates.weekly + (days % 7) * rates.daily;
+    return Math.floor(days / 7) * weekly + (days % 7) * rates.daily;
   }
   return days * rates.daily;
 }
