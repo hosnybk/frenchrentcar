@@ -40,7 +40,7 @@ export const privacyFr: LegalDocument = {
         "Informations provenant de votre activité : ces informations comprennent les adresses IP utilisées pour connecter votre ordinateur à Internet, le type et la langue du navigateur, les pages et URL de référence et de sortie, la date et l’heure, la durée des visites sur des pages spécifiques et vos informations de connexion.",
         "Informations provenant des cookies : nous collectons des informations par le biais de cookies stockés par les sites web sur votre appareil.",
         "Informations que vous nous avez fournies : vous pouvez nous fournir volontairement des informations supplémentaires vous concernant, y compris, mais sans s’y limiter, le nom, l’adresse, le sexe, le pays, les préférences en matière de services et d’autres informations fournies en remplissant les formulaires disponibles sur notre plateforme ou en nous contactant par téléphone, par courrier électronique, par WhatsApp ou par tout autre moyen.",
-        "Informations relatives au paiement et à la carte : vous pouvez nous fournir des informations de paiement, y compris le numéro de votre carte de crédit ou de débit, la date d’expiration de la carte, le code CVV et d’autres données.",
+        "Informations relatives au paiement : les paiements par carte sont saisis et traités directement sur la page de paiement sécurisée de notre prestataire Stripe. Nous ne recevons ni ne conservons le numéro complet de votre carte ni son code CVV ; nous recevons uniquement la confirmation du paiement (montant, date et statut).",
         "Les informations que vous nous fournissez lorsque vous nous contactez pour obtenir de l’aide.",
       ],
     },
@@ -100,7 +100,7 @@ export const privacyFr: LegalDocument = {
     {
       heading: "Protection de vos données personnelles",
       paragraphs: [
-        "{company} s’engage à traiter les informations de votre compte avec un haut niveau de sécurité et à protéger les données personnelles contre l’accès, l’utilisation ou la divulgation non autorisés. Les données relatives aux cartes de crédit et de débit et aux comptes bancaires sont uniquement stockées sous forme cryptée sur des ordinateurs qui ne sont pas connectés à Internet. Toutefois, ce niveau de protection n’est pleinement efficace que si vous appliquez vous-même de bonnes pratiques de sécurité. Vous ne devez pas partager les données de votre compte avec qui que ce soit. Si vous craignez que l’une de vos données personnelles ait été divulguée, vous devez la modifier immédiatement après vous être connecté à votre compte.",
+        "{company} s’engage à traiter les informations de votre compte avec un haut niveau de sécurité et à protéger les données personnelles contre l’accès, l’utilisation ou la divulgation non autorisés. Les paiements par carte sont traités par Stripe, prestataire de paiement certifié PCI DSS : {company} ne stocke aucune donnée de carte bancaire. Toutefois, ce niveau de protection n’est pleinement efficace que si vous appliquez vous-même de bonnes pratiques de sécurité. Vous ne devez pas partager les données de votre compte avec qui que ce soit. Si vous craignez que l’une de vos données personnelles ait été divulguée, vous devez la modifier immédiatement après vous être connecté à votre compte.",
       ],
     },
     {
@@ -331,20 +331,18 @@ export const termsFr: LegalDocument = {
     },
     {
       subheading: "Paiements",
-      paragraphs: ["Il existe deux modes de paiement :"],
       items: [
-        "Réserver et payer maintenant : prépaiement par virement bancaire sur le compte de l’entreprise. Les tarifs prépayés sont disponibles en ligne et le montant estimé doit être payé en totalité au moment de la réservation.",
-        "Réserver et payer à l’agence : paiement directement à l’agence de {company}.",
+        "La réservation effectuée sur le site ou par WhatsApp est une demande : aucun paiement n’est demandé à ce stade.",
+        "Après vérification de la disponibilité du véhicule, {company} confirme la réservation et envoie au client un lien de paiement sécurisé.",
+        "Le client règle la totalité du prix de la location en ligne, par carte bancaire, via ce lien, avant la remise du véhicule.",
+        "Les prix sont indiqués et facturés en dirhams des Émirats arabes unis (AED).",
+        "Les annulations et remboursements sont régis par notre Politique d’annulation et de remboursement.",
       ],
     },
     {
       subheading: "Moyens de paiement",
-      paragraphs: ["Le paiement peut être effectué par les moyens suivants :"],
-      items: [
-        "Cartes de crédit : les cartes généralement acceptées par {company} sont Mastercard et Visa.",
-        "Cartes de débit : elles doivent être liées à un compte bancaire pour être acceptées.",
-        "Cartes Maestro.",
-        "Cartes Visa Electron.",
+      paragraphs: [
+        "Le paiement en ligne s’effectue par carte de crédit ou de débit (notamment Visa et Mastercard) sur la page de paiement sécurisée de Stripe. Les moyens de paiement acceptés sont affichés sur cette page.",
       ],
     },
     {

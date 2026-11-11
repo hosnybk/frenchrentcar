@@ -23,7 +23,7 @@ export const privacyEn: LegalDocument = {
         "Information from your activity: this includes the IP addresses used to connect your computer to the Internet, browser type and language, referring and exit pages and URLs, date and time, the time spent on specific pages and your login information.",
         "Information from cookies: we collect information through cookies stored by websites on your device.",
         "Information you have given us: you may voluntarily provide additional information about yourself, including but not limited to your name, address, gender, country, service preferences and other information provided by filling in the forms available on our platform or by contacting us by phone, e-mail, WhatsApp or any other means.",
-        "Payment and card information: you may provide us with payment information, including your credit or debit card number, card expiry date, CVV code and other data.",
+        "Payment information: card payments are entered and processed directly on the secure payment page of our provider Stripe. We do not receive or store your full card number or CVV code; we only receive confirmation of the payment (amount, date and status).",
         "Information you provide when you contact us for help.",
       ],
     },
@@ -83,7 +83,7 @@ export const privacyEn: LegalDocument = {
     {
       heading: "Protection of your personal data",
       paragraphs: [
-        "{company} undertakes to handle your account information with a high level of security and to protect personal data against unauthorised access, use or disclosure. Credit card, debit card and bank account data are only stored in encrypted form on computers that are not connected to the Internet. However, this level of protection is only fully effective if you also follow good security practices yourself. You must not share your account details with anyone. If you are concerned that any of your personal data has been disclosed, you must change it immediately after logging in to your account.",
+        "{company} undertakes to handle your account information with a high level of security and to protect personal data against unauthorised access, use or disclosure. Card payments are processed by Stripe, a PCI DSS certified payment provider: {company} does not store any bank card data. However, this level of protection is only fully effective if you also follow good security practices yourself. You must not share your account details with anyone. If you are concerned that any of your personal data has been disclosed, you must change it immediately after logging in to your account.",
       ],
     },
     {
@@ -314,20 +314,18 @@ export const termsEn: LegalDocument = {
     },
     {
       subheading: "Payments",
-      paragraphs: ["There are two payment methods:"],
       items: [
-        "Book and pay now: prepayment by bank transfer to the company’s account. Prepaid rates are available online and the estimated amount must be paid in full at the time of booking.",
-        "Book and pay at the agency: payment directly at the {company} agency.",
+        "A booking made on the website or via WhatsApp is a request: no payment is required at this stage.",
+        "After checking that the vehicle is available, {company} confirms the booking and sends the customer a secure payment link.",
+        "The customer pays the full rental price online, by bank card, through this link, before the vehicle is handed over.",
+        "Prices are shown and charged in United Arab Emirates dirhams (AED).",
+        "Cancellations and refunds are governed by our Cancellation & Refund Policy.",
       ],
     },
     {
       subheading: "Means of payment",
-      paragraphs: ["Payment can be made by the following means:"],
-      items: [
-        "Credit cards: the cards generally accepted by {company} are Mastercard and Visa.",
-        "Debit cards: they must be linked to a bank account to be accepted.",
-        "Maestro cards.",
-        "Visa Electron cards.",
+      paragraphs: [
+        "Online payment is made by credit or debit card (including Visa and Mastercard) on Stripe’s secure payment page. The accepted payment methods are shown on that page.",
       ],
     },
     {
@@ -379,7 +377,7 @@ export const privacyAr: LegalDocument = {
         "المعلومات الناتجة عن نشاطك: تشمل عناوين IP المستخدمة لربط جهاز الكمبيوتر الخاص بك بالإنترنت، ونوع المتصفح ولغته، وصفحات وعناوين URL المُحيلة والخروج، والتاريخ والوقت، ومدة زيارة صفحات معينة، ومعلومات تسجيل الدخول الخاصة بك.",
         "المعلومات الواردة من ملفات تعريف الارتباط: نجمع معلومات من خلال ملفات تعريف الارتباط التي تخزنها المواقع الإلكترونية على جهازك.",
         "المعلومات التي قدمتها لنا: يمكنك أن تزودنا طوعاً بمعلومات إضافية عنك، بما في ذلك على سبيل المثال لا الحصر الاسم والعنوان والجنس والبلد وتفضيلات الخدمة وغيرها من المعلومات المقدمة عبر ملء النماذج المتاحة على منصتنا أو عبر التواصل معنا بالهاتف أو البريد الإلكتروني أو واتساب أو أي وسيلة أخرى.",
-        "معلومات الدفع والبطاقة: يمكنك تزويدنا بمعلومات الدفع، بما في ذلك رقم بطاقتك الائتمانية أو بطاقة الخصم، وتاريخ انتهاء البطاقة، ورمز CVV، وغيرها من البيانات.",
+        "معلومات الدفع: يتم إدخال مدفوعات البطاقات ومعالجتها مباشرة على صفحة الدفع الآمنة لمزود خدمة الدفع لدينا Stripe. لا نستلم ولا نحتفظ برقم بطاقتك الكامل أو رمز CVV؛ نستلم فقط تأكيد الدفع (المبلغ والتاريخ والحالة).",
         "المعلومات التي تقدمها لنا عند التواصل معنا للحصول على المساعدة.",
       ],
     },
@@ -439,7 +437,7 @@ export const privacyAr: LegalDocument = {
     {
       heading: "حماية بياناتك الشخصية",
       paragraphs: [
-        "تلتزم {company} بالتعامل مع معلومات حسابك بمستوى عالٍ من الأمان وبحماية البيانات الشخصية من الوصول أو الاستخدام أو الإفصاح غير المصرح به. لا يتم تخزين بيانات البطاقات الائتمانية وبطاقات الخصم والحسابات المصرفية إلا بشكل مشفر على أجهزة كمبيوتر غير متصلة بالإنترنت. ومع ذلك، لا يكون هذا المستوى من الحماية فعالاً بالكامل إلا إذا اتبعت أنت أيضاً ممارسات أمنية جيدة. يجب ألا تشارك بيانات حسابك مع أي شخص. إذا كنت تخشى أن تكون أي من بياناتك الشخصية قد كُشفت، فيجب عليك تغييرها فوراً بعد تسجيل الدخول إلى حسابك.",
+        "تلتزم {company} بالتعامل مع معلومات حسابك بمستوى عالٍ من الأمان وبحماية البيانات الشخصية من الوصول أو الاستخدام أو الإفصاح غير المصرح به. تتم معالجة مدفوعات البطاقات عبر Stripe، وهو مزود خدمات دفع حاصل على شهادة PCI DSS، ولا تخزن {company} أي بيانات خاصة بالبطاقات المصرفية. ومع ذلك، لا يكون هذا المستوى من الحماية فعالاً بالكامل إلا إذا اتبعت أنت أيضاً ممارسات أمنية جيدة. يجب ألا تشارك بيانات حسابك مع أي شخص. إذا كنت تخشى أن تكون أي من بياناتك الشخصية قد كُشفت، فيجب عليك تغييرها فوراً بعد تسجيل الدخول إلى حسابك.",
       ],
     },
     {
@@ -670,20 +668,18 @@ export const termsAr: LegalDocument = {
     },
     {
       subheading: "المدفوعات",
-      paragraphs: ["توجد طريقتان للدفع:"],
       items: [
-        "احجز وادفع الآن: الدفع المسبق عن طريق التحويل المصرفي إلى حساب الشركة. الأسعار المدفوعة مسبقاً متاحة عبر الإنترنت، ويجب دفع المبلغ التقديري بالكامل عند الحجز.",
-        "احجز وادفع في الوكالة: الدفع مباشرة في وكالة {company}.",
+        "الحجز عبر الموقع الإلكتروني أو عبر واتساب هو طلب حجز: لا يُطلب أي دفع في هذه المرحلة.",
+        "بعد التحقق من توفر السيارة، تؤكد {company} الحجز وترسل إلى العميل رابط دفع آمناً.",
+        "يدفع العميل كامل سعر الإيجار عبر الإنترنت ببطاقة مصرفية من خلال هذا الرابط، قبل تسليم السيارة.",
+        "تُعرض الأسعار وتُحتسب بدرهم الإمارات العربية المتحدة (AED).",
+        "تخضع عمليات الإلغاء والاسترداد لسياسة الإلغاء والاسترداد الخاصة بنا.",
       ],
     },
     {
       subheading: "وسائل الدفع",
-      paragraphs: ["يمكن الدفع بالوسائل التالية:"],
-      items: [
-        "البطاقات الائتمانية: البطاقات المقبولة عادةً لدى {company} هي Mastercard وVisa.",
-        "بطاقات الخصم: يجب أن تكون مرتبطة بحساب مصرفي حتى تُقبل.",
-        "بطاقات Maestro.",
-        "بطاقات Visa Electron.",
+      paragraphs: [
+        "يتم الدفع عبر الإنترنت ببطاقة ائتمانية أو بطاقة خصم (ومنها Visa وMastercard) على صفحة الدفع الآمنة الخاصة بـ Stripe. وتظهر وسائل الدفع المقبولة على تلك الصفحة.",
       ],
     },
     {
