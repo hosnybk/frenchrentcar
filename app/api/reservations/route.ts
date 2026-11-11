@@ -25,17 +25,30 @@ function dubaiDate(date: string, time: string) {
   return new Date(Date.UTC(year, month - 1, day, hour - 4, minute));
 }
 
-function estimateAed(days: number, rates: { dailyAED: number; weeklyAED: number; monthlyAED: number }) {
+// Same rule as the website estimate: weekly/monthly rates fall back to the daily rate.
+function estimateAed(
+  days: number,
+  rates: { dailyAED: number; weeklyAED: number | null; monthlyAED: number | null },
+) {
+  const weekly = rates.weeklyAED ?? rates.dailyAED * 7;
+  const monthly = rates.monthlyAED ?? rates.dailyAED * 30;
   if (days >= 30) {
-    return Math.floor(days / 30) * rates.monthlyAED + Math.ceil((days % 30) / 7) * rates.weeklyAED;
+    const rest = days % 30;
+    return Math.floor(days / 30) * monthly + Math.floor(rest / 7) * weekly + (rest % 7) * rates.dailyAED;
   }
   if (days >= 7) {
-    return Math.floor(days / 7) * rates.weeklyAED + (days % 7) * rates.dailyAED;
+    return Math.floor(days / 7) * weekly + (days % 7) * rates.dailyAED;
   }
   return days * rates.dailyAED;
 }
 
 export async function POST(request: Request) {
+  // Disabled until online payment is ready: the endpoint is public and has no
+  // rate limiting yet. Enable with ENABLE_RESERVATIONS_API=true.
+  if (process.env.ENABLE_RESERVATIONS_API !== "true") {
+    return Response.json({ error: "RESERVATIONS_API_DISABLED" }, { status: 503 });
+  }
+
   let payload: z.infer<typeof reservationSchema>;
   try {
     payload = reservationSchema.parse(await request.json());

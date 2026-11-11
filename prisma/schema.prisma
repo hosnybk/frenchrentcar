@@ -4,7 +4,9 @@ generator client {
 
 datasource db {
   provider = "postgresql"
-  url      = env("DATABASE_URL")
+  url       = env("DATABASE_URL")
+  // Direct (non-pooled) connection used by `prisma migrate` (Neon).
+  directUrl = env("DATABASE_URL_UNPOOLED")
 }
 
 enum ReservationStatus {
@@ -33,15 +35,17 @@ model Vehicle {
   slug         String        @unique
   name         String
   category     String
-  year         Int
-  seats        Int
-  doors        Int
-  transmission String
-  fuel         String
+  categories   String[]
+  year         Int?
+  seats        Int?
+  doors        Int?
+  transmission String?
+  fuel         String?
   imageUrls    String[]
   dailyAED     Int
-  weeklyAED    Int
-  monthlyAED   Int
+  weeklyAED    Int?
+  monthlyAED   Int?
+  sortOrder    Int           @default(0)
   isDemo       Boolean       @default(true)
   isActive     Boolean       @default(false)
   reservations Reservation[]
