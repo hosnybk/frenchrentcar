@@ -13,6 +13,7 @@ import {
   termsFr,
   tradeLicense,
 } from "@/lib/legal-content";
+import { privacyAr, privacyEn, termsAr, termsEn } from "@/lib/legal-content-i18n";
 import { vehicles } from "@/lib/vehicles";
 import { vehicleCategory } from "@/lib/vehicle-copy";
 
@@ -570,13 +571,12 @@ export function LegalPage({
         : kind === "cancellation"
           ? "cancellationTitle"
           : "termsTitle";
-  // The cancellation policy exists in every language; the other documents are French only.
-  const translated = kind === "cancellation";
+  // Every legal document exists in French, English and Arabic.
   const legalDoc =
     kind === "privacy"
-      ? privacyFr
+      ? { fr: privacyFr, en: privacyEn, ar: privacyAr }[locale]
       : kind === "terms"
-        ? termsFr
+        ? { fr: termsFr, en: termsEn, ar: termsAr }[locale]
         : kind === "cancellation"
           ? cancellationPolicy[locale]
           : null;
@@ -587,24 +587,17 @@ export function LegalPage({
         .replaceAll("{company}", companyLegalName)
         .replaceAll("{email}", company.email.includes("@") ? company.email : "—")
         .replaceAll("{whatsapp}", whatsappDigits ? `+${whatsappDigits}` : "—");
-    const frenchOnly = translated
-      ? ""
-      : locale === "ar"
-        ? "هذه الوثيقة متاحة حالياً باللغة الفرنسية فقط."
-        : locale === "en"
-          ? "This document is currently available in French only."
-          : "";
     return (
       <>
         <PageIntro
           eyebrow={companyLegalName}
           title={translate(locale, titleKey)}
-          body={frenchOnly}
+          body=""
         />
         <article
           className="page-wrap legal-document"
-          lang={translated ? locale : "fr"}
-          dir={translated && locale === "ar" ? "rtl" : "ltr"}
+          lang={locale}
+          dir={locale === "ar" ? "rtl" : "ltr"}
         >
           {legalDoc.blocks.map((block, index) => (
             <section key={index}>
