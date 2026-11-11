@@ -135,7 +135,10 @@ export async function POST(request: Request) {
       status: 201,
       headers: { "Cache-Control": "no-store" },
     });
-  } catch {
+  } catch (error) {
+    // Log only the error type/code (no personal data, no connection string).
+    const code = typeof error === "object" && error && "code" in error ? String(error.code) : "";
+    console.error("[reservations] database error", error instanceof Error ? error.name : "unknown", code);
     return Response.json({ error: "RESERVATION_SERVICE_UNAVAILABLE" }, { status: 503 });
   }
 }

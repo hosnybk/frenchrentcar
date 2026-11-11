@@ -12,7 +12,9 @@
     "db:migrate": "prisma migrate dev",
     "db:deploy": "prisma migrate deploy",
     "db:seed": "node --env-file=.env.local --no-warnings prisma/seed.mjs",
-    "admin:create": "node --env-file=.env.local --no-warnings scripts/create-admin.mjs"
+    "admin:create": "node --env-file=.env.local --no-warnings scripts/create-admin.mjs",
+    "vercel-build": "node scripts/db-deploy.mjs && next build",
+    "admin:create:prod": "node --env-file=.env.production.local --no-warnings scripts/create-admin.mjs"
   },
   "dependencies": {
     "@fontsource/noto-naskh-arabic": "^5.3.0",
