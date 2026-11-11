@@ -1944,6 +1944,51 @@ img {
   line-height: 1.9;
 }
 
+.legal-document {
+  padding-block: 26px 100px;
+  border-block-start: 1px solid var(--line);
+  color: var(--ink);
+}
+
+.legal-document > section {
+  max-width: 860px;
+}
+
+.legal-document h2 {
+  margin: 38px 0 12px;
+  font-size: 20px;
+  font-weight: 600;
+}
+
+.legal-document h3 {
+  margin: 22px 0 8px;
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.legal-document p,
+.legal-document li {
+  color: #4f544f;
+  font-size: 14px;
+  line-height: 1.8;
+}
+
+.legal-document p {
+  margin: 10px 0;
+}
+
+.legal-document ul {
+  margin: 10px 0;
+  padding-inline-start: 20px;
+}
+
+.legal-document li + li {
+  margin-top: 6px;
+}
+
 .admin-placeholder {
   min-height: 58vh;
   display: flex;
