@@ -22,6 +22,20 @@ npm run build
 npm run start
 ```
 
+## Deploy to Vercel
+
+The project builds on Vercel with no database or payment keys required; the public pages and the browser-only enquiry flow work out of the box.
+
+1. Push the repository to GitHub, then import it in Vercel (**Add New → Project**). The Next.js preset and `next build` are detected automatically; `postinstall` runs `prisma generate`.
+2. Add environment variables under **Settings → Environment Variables** (see `.env.example`):
+   - `NEXT_PUBLIC_SITE_URL` — production origin used by `sitemap.xml`, `robots.txt`, `metadataBase` and Stripe redirect URLs.
+   - Optional branding/contact values: `NEXT_PUBLIC_COMPANY_*`, `NEXT_PUBLIC_OPENING_HOURS`, `NEXT_PUBLIC_WHATSAPP_NUMBER`, `NEXT_PUBLIC_GOOGLE_MAPS_EMBED_URL`.
+   - `DATABASE_URL` — only if you use the persistent reservation API.
+   - `STRIPE_*` — only if you enable TEST checkout (see the Stripe section).
+3. Deploy.
+
+`vercel.json` adds baseline security headers (`X-Content-Type-Options`, `X-Frame-Options`, `Referrer-Policy`, `Permissions-Policy`, HSTS) and long-lived caching for `/fonts` and `/images`. No Content-Security-Policy is shipped yet: a safe CSP must be introduced with nonces and validated against the Google Maps embed, so add it only after testing. `NEXT_PUBLIC_*` variables are exposed to the browser, so never put secrets in them. Without `DATABASE_URL`, `POST /api/reservations` and `POST /api/checkout` return `503` while the rest of the site keeps working.
+
 ## Languages and routes
 
 Translations live in `lib/translations.ts`. The locale prefix is retained across navigation. The `app/[lang]/layout.tsx` file is the root layout and renders the `<html lang>` and `dir` attributes per locale on the server (Arabic is `dir="rtl"`); the `/` root path is redirected to `/en` in `next.config.ts`. Site pages are provided in all three locales:
