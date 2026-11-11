@@ -102,6 +102,7 @@ export function BookingPage({
   const [complete, setComplete] = useState("");
   const [messageUrl, setMessageUrl] = useState("");
   const [error, setError] = useState("");
+  const [submitting, setSubmitting] = useState(false);
   const selectedVehicle = vehicles.find((car) => car.slug === initialVehicle);
   const [pickupDate, setPickupDate] = useState(initialPickupDate);
   const [returnDate, setReturnDate] = useState(initialReturnDate);
@@ -124,8 +125,9 @@ export function BookingPage({
     return Math.max(1, days);
   }, [pickupDate, returnDate, pickupTime, returnTime]);
 
-  function submit(event: FormEvent<HTMLFormElement>) {
+  async function submit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
+    if (submitting) return;
     setError("");
     const form = new FormData(event.currentTarget);
     const requestedPickupDate = String(form.get("pickupDate"));
@@ -144,10 +146,47 @@ export function BookingPage({
       );
       return;
     }
-    const reference = makeReference();
+    if (!buildMessageUrl("x")) {
+      setError(messageUnavailable(locale));
+      return;
+    }
     const vehicleSlug = String(form.get("vehicle"));
     const vehicleName = vehicles.find((car) => car.slug === vehicleSlug)?.name ?? vehicleSlug;
     const note = String(form.get("message") ?? "").trim();
+
+    // Open the WhatsApp tab now (inside the click) so pop-up blockers allow it,
+    // then point it at the final message once the request is saved.
+    const pending = window.open("", "_blank");
+    setSubmitting(true);
+    let reference = "";
+    try {
+      const response = await fetch("/api/reservations", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          vehicleSlug,
+          fullName: String(form.get("fullName")).trim(),
+          email: String(form.get("email")).trim(),
+          phone: String(form.get("phone")).trim(),
+          pickupDate: requestedPickupDate,
+          returnDate: requestedReturnDate,
+          pickupTime: requestedPickupTime,
+          returnTime: requestedReturnTime,
+          message: note,
+          locale,
+          website: String(form.get("website") ?? ""),
+        }),
+      });
+      if (response.ok) {
+        const data = (await response.json()) as { reference?: string };
+        reference = data.reference ?? "";
+      }
+    } catch {
+      // Network or server error: the WhatsApp message still reaches the team.
+    } finally {
+      setSubmitting(false);
+    }
+    if (!reference) reference = makeReference();
     const text = [
       `French Rent Car · ${translate(locale, "requestBooking")}`,
       `${translate(locale, "requestRef")}: ${reference}`,
@@ -162,11 +201,12 @@ export function BookingPage({
       .filter(Boolean)
       .join("\n");
     const url = buildMessageUrl(text);
-    if (!url) {
-      setError(messageUnavailable(locale));
-      return;
+    if (pending) {
+      pending.opener = null;
+      pending.location.href = url;
+    } else {
+      openMessageUrl(url);
     }
-    openMessageUrl(url);
     setMessageUrl(url);
     setComplete(reference);
   }
@@ -263,8 +303,17 @@ export function BookingPage({
                 <span>{translate(locale, "message")}</span>
                 <textarea name="message" rows={4} />
               </label>
+              {/* Honeypot for bots: hidden from people and assistive technologies. */}
+              <input
+                type="text"
+                name="website"
+                tabIndex={-1}
+                autoComplete="off"
+                aria-hidden="true"
+                style={{ position: "absolute", left: "-10000px", width: 1, height: 1, opacity: 0 }}
+              />
               {error && <p className="form-error" role="alert">{error}</p>}
-              <button className="button button-red button-full" type="submit">
+              <button className="button button-red button-full" type="submit" disabled={submitting} aria-busy={submitting}>
                 {translate(locale, "sendRequest")} <span aria-hidden="true">↗</span>
               </button>
               <p className="form-footnote">{translate(locale, "pendingNotice")}</p>

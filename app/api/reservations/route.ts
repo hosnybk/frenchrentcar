@@ -1,5 +1,10 @@
+import { createHash } from "node:crypto";
 import { z } from "zod";
 import { prisma } from "@/lib/prisma";
+
+const LIMIT_PER_IP_PER_HOUR = 5;
+const LIMIT_PER_PHONE_PER_DAY = 5;
+const LIMIT_GLOBAL_PER_HOUR = 60;
 
 const reservationSchema = z
   .object({
@@ -12,6 +17,9 @@ const reservationSchema = z
     pickupTime: z.string().regex(/^([01]\d|2[0-3]):[0-5]\d$/),
     returnTime: z.string().regex(/^([01]\d|2[0-3]):[0-5]\d$/),
     message: z.string().trim().max(2000).optional().default(""),
+    locale: z.enum(["en", "fr", "ar"]).default("en"),
+    /** Honeypot field, must stay empty. */
+    website: z.string().max(200).optional().default(""),
   })
   .strict();
 
@@ -43,18 +51,23 @@ function estimateAed(
 }
 
 export async function POST(request: Request) {
-  // Disabled until online payment is ready: the endpoint is public and has no
-  // rate limiting yet. Enable with ENABLE_RESERVATIONS_API=true.
-  if (process.env.ENABLE_RESERVATIONS_API !== "true") {
-    return Response.json({ error: "RESERVATIONS_API_DISABLED" }, { status: 503 });
-  }
-
   let payload: z.infer<typeof reservationSchema>;
   try {
     payload = reservationSchema.parse(await request.json());
   } catch {
     return Response.json({ error: "INVALID_REQUEST" }, { status: 400 });
   }
+
+  // Honeypot: real visitors never fill this hidden field. Pretend success, save nothing.
+  if (payload.website) {
+    return Response.json(
+      { reference: `FRC-${crypto.randomUUID().slice(0, 8).toUpperCase()}`, status: "PENDING" },
+      { status: 201, headers: { "Cache-Control": "no-store" } },
+    );
+  }
+
+  const clientIp = request.headers.get("x-forwarded-for")?.split(",")[0]?.trim() || "unknown";
+  const clientIpHash = createHash("sha256").update(`frc:${clientIp}`).digest("hex");
 
   const pickupAt = dubaiDate(payload.pickupDate, payload.pickupTime);
   const returnAt = dubaiDate(payload.returnDate, payload.returnTime);
@@ -75,16 +88,18 @@ export async function POST(request: Request) {
         });
         if (!vehicle) return { error: "VEHICLE_NOT_AVAILABLE" as const };
 
-        const overlap = await tx.reservation.findFirst({
-          where: {
-            vehicleId: vehicle.id,
-            status: { in: ["PENDING", "CONFIRMED"] },
-            pickupAt: { lt: returnAt },
-            returnAt: { gt: pickupAt },
-          },
-          select: { id: true },
-        });
-        if (overlap) return { error: "DATES_REQUIRE_CONFIRMATION" as const };
+        // Anti-abuse limits. Availability (overlapping dates) is checked by staff
+        // when they confirm the request in the admin area, not here.
+        const hourAgo = new Date(Date.now() - 60 * 60 * 1000);
+        const dayAgo = new Date(Date.now() - 24 * 60 * 60 * 1000);
+        const [fromIp, fromPhone, lastHour] = await Promise.all([
+          tx.reservation.count({ where: { clientIpHash, createdAt: { gte: hourAgo } } }),
+          tx.reservation.count({ where: { phone: payload.phone, createdAt: { gte: dayAgo } } }),
+          tx.reservation.count({ where: { createdAt: { gte: hourAgo } } }),
+        ]);
+        if (fromIp >= LIMIT_PER_IP_PER_HOUR || fromPhone >= LIMIT_PER_PHONE_PER_DAY || lastHour >= LIMIT_GLOBAL_PER_HOUR) {
+          return { error: "TOO_MANY_REQUESTS" as const };
+        }
 
         const reference = `FRC-${crypto.randomUUID().slice(0, 8).toUpperCase()}`;
         const reservation = await tx.reservation.create({
@@ -100,8 +115,10 @@ export async function POST(request: Request) {
             estimatedAED: estimateAed(days, vehicle),
             status: "PENDING",
             isDemo: false,
+            locale: payload.locale,
+            clientIpHash,
           },
-          select: { id: true, reference: true, estimatedAED: true, status: true },
+          select: { reference: true, estimatedAED: true, status: true },
         });
         return { reservation };
       },
@@ -109,7 +126,10 @@ export async function POST(request: Request) {
     );
 
     if ("error" in result) {
-      return Response.json({ error: result.error }, { status: 409 });
+      return Response.json(
+        { error: result.error },
+        { status: result.error === "TOO_MANY_REQUESTS" ? 429 : 409 },
+      );
     }
     return Response.json(result.reservation, {
       status: 201,

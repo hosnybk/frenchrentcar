@@ -69,12 +69,18 @@ model Reservation {
   estimatedAED     Int
   status           ReservationStatus @default(PENDING)
   isDemo           Boolean           @default(true)
+  /// Visitor language (en/fr/ar), used for the payment link.
+  locale           String            @default("en")
+  /// SHA-256 of the visitor IP (anti-abuse rate limiting only).
+  clientIpHash     String?
   payment          Payment?
   createdAt        DateTime          @default(now())
   updatedAt        DateTime          @updatedAt
 
   @@index([vehicleId, pickupAt, returnAt, status])
   @@index([status, createdAt])
+  @@index([clientIpHash, createdAt])
+  @@index([phone, createdAt])
 }
 
 model Payment {
