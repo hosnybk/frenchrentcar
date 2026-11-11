@@ -5,7 +5,14 @@ import { FormEvent, useEffect, useMemo, useRef, useState } from "react";
 import { company } from "@/config/company";
 import { todayInDubai } from "@/lib/dates";
 import { Locale, translate } from "@/lib/translations";
-import { companyLegalName, companyLegalNameAr, privacyFr, termsFr, tradeLicense } from "@/lib/legal-content";
+import {
+  cancellationPolicy,
+  companyLegalName,
+  companyLegalNameAr,
+  privacyFr,
+  termsFr,
+  tradeLicense,
+} from "@/lib/legal-content";
 import { vehicles } from "@/lib/vehicles";
 import { vehicleCategory } from "@/lib/vehicle-copy";
 
@@ -504,10 +511,26 @@ export function LegalPage({
   kind,
 }: {
   locale: Locale;
-  kind: "legal" | "privacy" | "terms";
+  kind: "legal" | "privacy" | "terms" | "cancellation";
 }) {
-  const titleKey = kind === "legal" ? "legalTitle" : kind === "privacy" ? "privacyTitle" : "termsTitle";
-  const legalDoc = kind === "privacy" ? privacyFr : kind === "terms" ? termsFr : null;
+  const titleKey =
+    kind === "legal"
+      ? "legalTitle"
+      : kind === "privacy"
+        ? "privacyTitle"
+        : kind === "cancellation"
+          ? "cancellationTitle"
+          : "termsTitle";
+  // The cancellation policy exists in every language; the other documents are French only.
+  const translated = kind === "cancellation";
+  const legalDoc =
+    kind === "privacy"
+      ? privacyFr
+      : kind === "terms"
+        ? termsFr
+        : kind === "cancellation"
+          ? cancellationPolicy[locale]
+          : null;
   if (legalDoc) {
     const whatsappDigits = company.whatsappNumber.replace(/\D/g, "");
     const fill = (text: string) =>
@@ -515,8 +538,9 @@ export function LegalPage({
         .replaceAll("{company}", companyLegalName)
         .replaceAll("{email}", company.email.includes("@") ? company.email : "—")
         .replaceAll("{whatsapp}", whatsappDigits ? `+${whatsappDigits}` : "—");
-    const frenchOnly =
-      locale === "ar"
+    const frenchOnly = translated
+      ? ""
+      : locale === "ar"
         ? "هذه الوثيقة متاحة حالياً باللغة الفرنسية فقط."
         : locale === "en"
           ? "This document is currently available in French only."
@@ -528,7 +552,11 @@ export function LegalPage({
           title={translate(locale, titleKey)}
           body={frenchOnly}
         />
-        <article className="page-wrap legal-document" lang="fr" dir="ltr">
+        <article
+          className="page-wrap legal-document"
+          lang={translated ? locale : "fr"}
+          dir={translated && locale === "ar" ? "rtl" : "ltr"}
+        >
           {legalDoc.blocks.map((block, index) => (
             <section key={index}>
               {block.heading && <h2>{fill(block.heading)}</h2>}

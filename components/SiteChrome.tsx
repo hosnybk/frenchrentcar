@@ -131,7 +131,9 @@ export function SiteFooter({ locale }: { locale: Locale }) {
         <div>
           <a href={`/${locale}/privacy`}>{translate(locale, "privacy")}</a>
           <a href={`/${locale}/terms`}>{translate(locale, "terms")}</a>
-        </div>      </div>
+          <a href={`/${locale}/cancellation`}>{translate(locale, "cancellation")}</a>
+        </div>
+      </div>
     </footer>
   );
 }

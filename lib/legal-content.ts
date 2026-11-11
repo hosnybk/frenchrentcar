@@ -377,3 +377,135 @@ export const termsFr: LegalDocument = {
     },
   ],
 };
+
+// Cancellation & refund policy (rules provided by the company, 2026-11-11).
+// Full refund ≥ 48 h before pick-up; later: one rental day withheld;
+// no-show: no refund; early return: no refund of unused days.
+export const cancellationPolicy: Record<"fr" | "en" | "ar", LegalDocument> = {
+  fr: {
+    title: "Politique d’annulation et de remboursement",
+    blocks: [
+      {
+        paragraphs: [
+          "La présente politique s’applique aux locations réservées et payées en ligne auprès de {company}.",
+          "Toute demande d’annulation doit être envoyée par WhatsApp au {whatsapp} ou par e-mail à {email}, en indiquant la référence de la réservation. L’heure de réception du message fait foi.",
+        ],
+      },
+      {
+        heading: "Annulation gratuite",
+        paragraphs: [
+          "Pour toute annulation reçue au moins 48 heures avant l’heure de départ prévue, le montant payé est intégralement remboursé.",
+        ],
+      },
+      {
+        heading: "Annulation tardive",
+        paragraphs: [
+          "Pour toute annulation reçue moins de 48 heures avant l’heure de départ prévue, le prix d’une journée de location est retenu et le reste du montant payé est remboursé.",
+        ],
+      },
+      {
+        heading: "Absence au rendez-vous",
+        paragraphs: [
+          "Si le client ne se présente pas à l’heure de départ prévue sans avoir annulé sa réservation, aucun remboursement n’est effectué.",
+        ],
+      },
+      {
+        heading: "Restitution anticipée",
+        paragraphs: [
+          "En cas de restitution du véhicule avant la fin de la période réservée, les jours non utilisés ne sont pas remboursés.",
+        ],
+      },
+      {
+        heading: "Modalités de remboursement",
+        paragraphs: [
+          "Les remboursements sont effectués sur le moyen de paiement utilisé lors de la réservation. Selon la banque, le remboursement apparaît généralement sur le relevé sous 5 à 10 jours ouvrés.",
+          "Le dépôt de garantie, demandé à la remise du véhicule, est régi par nos Conditions générales.",
+        ],
+      },
+    ],
+  },
+  en: {
+    title: "Cancellation and refund policy",
+    blocks: [
+      {
+        paragraphs: [
+          "This policy applies to rentals booked and paid online with {company}.",
+          "Cancellation requests must be sent by WhatsApp to {whatsapp} or by e-mail to {email}, quoting the booking reference. The time the message is received is the time that counts.",
+        ],
+      },
+      {
+        heading: "Free cancellation",
+        paragraphs: [
+          "If we receive your cancellation at least 48 hours before the scheduled pick-up time, the amount paid is refunded in full.",
+        ],
+      },
+      {
+        heading: "Late cancellation",
+        paragraphs: [
+          "If we receive your cancellation less than 48 hours before the scheduled pick-up time, the price of one rental day is withheld and the rest of the amount paid is refunded.",
+        ],
+      },
+      {
+        heading: "No-show",
+        paragraphs: [
+          "If the customer does not show up at the scheduled pick-up time without having cancelled, no refund is made.",
+        ],
+      },
+      {
+        heading: "Early return",
+        paragraphs: [
+          "If the vehicle is returned before the end of the booked period, unused days are not refunded.",
+        ],
+      },
+      {
+        heading: "How refunds are made",
+        paragraphs: [
+          "Refunds are made to the payment method used for the booking. Depending on the bank, the refund usually appears on the statement within 5 to 10 business days.",
+          "The security deposit, collected when the vehicle is handed over, is governed by our Terms & conditions.",
+        ],
+      },
+    ],
+  },
+  ar: {
+    title: "سياسة الإلغاء والاسترداد",
+    blocks: [
+      {
+        paragraphs: [
+          "تنطبق هذه السياسة على عمليات التأجير المحجوزة والمدفوعة عبر الإنترنت لدى {company}.",
+          "يجب إرسال طلب الإلغاء عبر واتساب على الرقم {whatsapp} أو عبر البريد الإلكتروني {email} مع ذكر رقم الحجز. يُعتمد وقت استلام الرسالة.",
+        ],
+      },
+      {
+        heading: "الإلغاء المجاني",
+        paragraphs: [
+          "إذا استلمنا طلب الإلغاء قبل 48 ساعة على الأقل من موعد الاستلام المحدد، يُسترد المبلغ المدفوع بالكامل.",
+        ],
+      },
+      {
+        heading: "الإلغاء المتأخر",
+        paragraphs: [
+          "إذا استلمنا طلب الإلغاء قبل أقل من 48 ساعة من موعد الاستلام المحدد، يُخصم سعر يوم تأجير واحد ويُسترد باقي المبلغ المدفوع.",
+        ],
+      },
+      {
+        heading: "عدم الحضور",
+        paragraphs: [
+          "إذا لم يحضر العميل في موعد الاستلام المحدد دون إلغاء الحجز، لا يتم استرداد أي مبلغ.",
+        ],
+      },
+      {
+        heading: "الإرجاع المبكر",
+        paragraphs: [
+          "في حال إرجاع السيارة قبل نهاية فترة الحجز، لا تُسترد قيمة الأيام غير المستخدمة.",
+        ],
+      },
+      {
+        heading: "طريقة الاسترداد",
+        paragraphs: [
+          "يتم الاسترداد إلى وسيلة الدفع المستخدمة في الحجز. حسب البنك، يظهر المبلغ المسترد عادةً في كشف الحساب خلال 5 إلى 10 أيام عمل.",
+          "يخضع مبلغ التأمين، الذي يُطلب عند تسليم السيارة، لشروطنا وأحكامنا.",
+        ],
+      },
+    ],
+  },
+};
