@@ -2797,3 +2797,149 @@ img {
     transition-duration: 0.01ms !important;
   }
 }
+
+/* ---------- Admin area ---------- */
+.admin-login {
+  min-height: 60vh;
+  padding-block: 70px 90px;
+}
+
+.admin-login h1,
+.admin-dashboard h1 {
+  margin: 10px 0 24px;
+  font-size: 34px;
+}
+
+.admin-login-form {
+  max-width: 420px;
+}
+
+.admin-dashboard {
+  padding-block: 50px 90px;
+}
+
+.admin-head {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: 16px;
+}
+
+.admin-user {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.admin-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 10px 0 20px;
+  padding-block-end: 14px;
+  border-block-end: 1px solid var(--line);
+}
+
+.admin-tabs a {
+  padding: 8px 14px;
+  border: 1px solid var(--line);
+  color: var(--ink);
+  font-size: 13px;
+}
+
+.admin-tabs a[aria-current="page"] {
+  border-color: var(--ink);
+  background: var(--ink);
+  color: var(--white);
+}
+
+.admin-tabs a span {
+  margin-inline-start: 6px;
+  opacity: 0.7;
+}
+
+.admin-notice {
+  margin: 12px 0;
+  padding: 10px 14px;
+  border-inline-start: 3px solid #2f7d4f;
+  background: #eef6f0;
+  font-size: 13px;
+}
+
+.admin-notice.is-error {
+  border-color: var(--red);
+  background: #fbecee;
+}
+
+.admin-empty {
+  color: var(--muted);
+}
+
+.admin-list {
+  display: grid;
+  gap: 16px;
+}
+
+.admin-card {
+  padding: 18px 20px;
+  border: 1px solid var(--line);
+  background: var(--white);
+}
+
+.admin-card header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+  margin-block-end: 12px;
+}
+
+.admin-badge {
+  padding: 3px 8px;
+  border: 1px solid var(--line);
+  font-size: 11px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.admin-badge.status-pending { border-color: #c98a12; color: #8a5d05; }
+.admin-badge.status-confirmed { border-color: #2f7d4f; color: #2f7d4f; }
+.admin-badge.status-cancelled { border-color: var(--muted); color: var(--muted); }
+
+.admin-card dl {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
+  gap: 10px 20px;
+  margin: 0;
+}
+
+.admin-card dt {
+  color: var(--muted);
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.admin-card dd {
+  margin: 2px 0 0;
+  font-size: 14px;
+  overflow-wrap: anywhere;
+}
+
+.admin-message {
+  margin: 12px 0 0;
+  padding: 10px 12px;
+  background: var(--paper);
+  font-size: 13px;
+  white-space: pre-line;
+}
+
+.admin-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 14px;
+}

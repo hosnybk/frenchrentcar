@@ -11,7 +11,8 @@
     "db:generate": "prisma generate",
     "db:migrate": "prisma migrate dev",
     "db:deploy": "prisma migrate deploy",
-    "db:seed": "node prisma/seed.mjs"
+    "db:seed": "node --env-file=.env.local --no-warnings prisma/seed.mjs",
+    "admin:create": "node --env-file=.env.local --no-warnings scripts/create-admin.mjs"
   },
   "dependencies": {
     "@fontsource/noto-naskh-arabic": "^5.3.0",
