@@ -39,7 +39,7 @@ export const vehicles: Vehicle[] = [
     image: "/images/car-sedan.jpg",
     popular: 1,
     description:
-      "A composed, comfortable executive sedan for discovering the city or arriving in style. Demonstration vehicle details are illustrative.",
+      "A composed, comfortable executive sedan for discovering the city or arriving in style.",
     features: ["Leather interior", "Navigation", "Cruise control", "Bluetooth"],
   },
   {

@@ -64,7 +64,7 @@ export default function VehicleDetail({
           <div className="vehicle-main-image">
             <Image
               src={vehicle.image}
-              alt={`${vehicle.name} · demonstration vehicle`}
+              alt={vehicle.name}
               fill
               priority
               sizes="(max-width: 760px) 100vw, 64vw"

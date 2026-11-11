@@ -15,9 +15,9 @@ export async function generateMetadata({
     ar: "تأجير سيارات متميز في دبي",
   };
   const descriptions: Record<Locale, string> = {
-    en: "Explore the French Rent Car demonstration fleet and send a rental enquiry in Dubai.",
-    fr: "Découvrez la flotte de démonstration French Rent Car et envoyez votre demande de location à Dubaï.",
-    ar: "اكتشف أسطول فرنش رنت كار التجريبي وأرسل طلب تأجير في دبي.",
+    en: "Explore the French Rent Car fleet and send a rental enquiry in Dubai.",
+    fr: "Découvrez la flotte French Rent Car et envoyez votre demande de location à Dubaï.",
+    ar: "اكتشف أسطول فرنش رنت كار وأرسل طلب تأجير في دبي.",
   };
   return {
     title: titles[locale],

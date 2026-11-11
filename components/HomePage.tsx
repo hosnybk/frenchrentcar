@@ -193,11 +193,6 @@ export default function HomePage({ locale }: { locale: Locale }) {
         <BookingSearch locale={locale} />
       </div>
 
-      <div className="demo-ribbon">
-        <span className="demo-dot" />
-        {translate(locale, "demoNotice")}
-      </div>
-
       <section className="section section-fleet page-wrap">
         <div className="section-head">
           <div>
@@ -224,7 +219,7 @@ export default function HomePage({ locale }: { locale: Locale }) {
               >
                 <Image
                   src={car.image}
-                  alt={`${car.name}, véhicule fictif de démonstration`}
+                  alt={car.name}
                   fill
                   sizes="(max-width: 760px) 90vw, 33vw"
                 />

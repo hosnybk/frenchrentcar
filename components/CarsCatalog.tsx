@@ -30,7 +30,7 @@ export function VehicleCard({
       >
         <Image
           src={vehicle.image}
-          alt={`${vehicle.name}, demonstration vehicle`}
+          alt={vehicle.name}
           fill
           sizes="(max-width: 760px) 90vw, 33vw"
         />
@@ -150,7 +150,6 @@ export default function CarsCatalog({
         </div>
         <div className="catalog-count">
           <span>{String(filtered.length).padStart(2, "0")} / {vehicles.length.toString().padStart(2, "0")} {translate(locale, "navCars")}</span>
-          <span>{translate(locale, "demoNotice")}</span>
         </div>
         {filtered.length ? (
           <div className="car-grid catalog-grid">

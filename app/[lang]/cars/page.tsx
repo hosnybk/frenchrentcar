@@ -14,7 +14,7 @@ export async function generateMetadata({
   return {
     title,
     description:
-      "Browse French Rent Car's illustrative demonstration fleet in Dubai. All vehicles, rates and availability require confirmation.",
+      "Browse the French Rent Car fleet in Dubai and send a rental enquiry. Availability and rates are confirmed by our team.",
     alternates: {
       canonical: `/${locale}/cars`,
       languages: { en: "/en/cars", fr: "/fr/cars", ar: "/ar/cars" },

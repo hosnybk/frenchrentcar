@@ -21,7 +21,7 @@ export async function generateMetadata({
   return {
     title: `${vehicle.name} · ${vehicleCategory(locale, vehicle.category)}`,
     description:
-      "Demonstration vehicle details and indicative rental estimates. Availability and all commercial terms are subject to confirmation.",
+      "Vehicle details and indicative rental estimates. Availability and all commercial terms are subject to confirmation.",
     alternates: {
       canonical: `/${locale}/cars/${vehicle.slug}`,
       languages: {

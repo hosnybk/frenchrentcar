@@ -172,7 +172,6 @@ export function BookingPage({
             <form className="stacked-form" onSubmit={submit}>
               <div className="form-title-row">
                 <h2>{translate(locale, "requestBooking")}</h2>
-                <span className="demo-pill">{translate(locale, "demo")}</span>
               </div>
               <label>
                 <span>{translate(locale, "fullName")} *</span>
@@ -194,7 +193,7 @@ export function BookingPage({
                   <option value="" disabled>{translate(locale, "chooseVehicle")}</option>
                   {vehicles.map((vehicle) => (
                     <option value={vehicle.slug} key={vehicle.slug}>
-                      {vehicle.name} · {vehicleCategory(locale, vehicle.category)} · DEMO
+                      {vehicle.name} · {vehicleCategory(locale, vehicle.category)}
                     </option>
                   ))}
                 </select>
@@ -281,7 +280,6 @@ export function BookingPage({
           ) : (
             <p>{translate(locale, "bookingIntro")}</p>
           )}
-          <div className="summary-alert">{translate(locale, "demoNotice")}</div>
           <div className="payment-unavailable">
             <span className="eyebrow">{translate(locale, "paymentTitle")}</span>
             <p>{translate(locale, "paymentDisabled")}</p>
@@ -356,7 +354,6 @@ export function ContactPage({ locale }: { locale: Locale }) {
             <form className="stacked-form" onSubmit={submit}>
               <div className="form-title-row">
                 <h2>{translate(locale, "navContact")}</h2>
-                <span className="demo-pill">{translate(locale, "demo")}</span>
               </div>
               <label><span>{translate(locale, "fullName")} *</span><input name="name" required autoComplete="name" /></label>
               <div className="form-two-col">
@@ -497,10 +494,10 @@ export function LegalPage({
 }) {
   const titleKey = kind === "legal" ? "legalTitle" : kind === "privacy" ? "privacyTitle" : "termsTitle";
   const pending = locale === "fr"
-    ? "Cette page est un emplacement de démonstration. Les informations de l’entreprise, le numéro de licence, les conditions de location et les textes juridiques doivent être validés par l’entreprise et son conseil avant publication."
+    ? "Le contenu de cette page est en cours de mise à jour. Pour toute question, contactez-nous."
     : locale === "ar"
-      ? "هذه الصفحة نموذج توضيحي. يجب اعتماد بيانات الشركة ورقم الرخصة وشروط التأجير والنصوص القانونية من الشركة ومستشارها قبل النشر."
-      : "This is a demonstration placeholder. Company particulars, licence number, rental terms and legal wording must be confirmed by the company and its counsel before publication.";
+      ? "محتوى هذه الصفحة قيد التحديث. لأي استفسار، تواصل معنا."
+      : "The content of this page is being updated. For any question, please contact us.";
   return (
     <>
       <PageIntro
@@ -509,7 +506,6 @@ export function LegalPage({
         body={pending}
       />
       <section className="page-wrap legal-placeholder">
-        <span className="demo-pill">{translate(locale, "demo")}</span>
         <p>{pending}</p>
         <a className="text-link" href={`/${locale}/contact`}>{translate(locale, "navContact")} ↗</a>
       </section>

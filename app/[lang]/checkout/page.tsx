@@ -7,10 +7,10 @@ export default async function Checkout({ params }: { params: Promise<{ lang: str
 
   return (
     <section className="page-wrap admin-placeholder">
-      <span className="eyebrow">FRC / STRIPE TEST</span>
+      <span className="eyebrow">FRENCH RENT CAR / DUBAI</span>
       <h1>{translate(locale, "paymentTitle")}</h1>
       <p>{paymentNotAvailable}</p>
-      <span className="status-chip">CHECKOUT DISABLED · DEMO PRICES</span>
+      <span className="status-chip">ONLINE PAYMENT NOT AVAILABLE</span>
       <a className="text-link" href={`/${locale}/booking`}>{translate(locale, "requestBooking")} ↗</a>
     </section>
   );

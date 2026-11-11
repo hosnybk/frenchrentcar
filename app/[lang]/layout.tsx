@@ -23,9 +23,9 @@ export async function generateMetadata({
     ar: "فرنش رنت كار | تأجير سيارات متميز في دبي",
   };
   const descriptions: Record<Locale, string> = {
-    en: "Discover Dubai your way with French Rent Car. Explore our demonstration fleet and send a rental enquiry.",
-    fr: "Découvrez Dubaï à votre façon avec French Rent Car. Explorez notre flotte de démonstration et envoyez votre demande de location.",
-    ar: "اكتشف دبي بأسلوبك مع فرنش رنت كار. اطّلع على أسطولنا التجريبي وأرسل طلب التأجير.",
+    en: "Discover Dubai your way with French Rent Car. Explore our fleet and send a rental enquiry.",
+    fr: "Découvrez Dubaï à votre façon avec French Rent Car. Explorez notre flotte et envoyez votre demande de location.",
+    ar: "اكتشف دبي بأسلوبك مع فرنش رنت كار. اطّلع على أسطولنا وأرسل طلب التأجير.",
   };
   const openGraphLocales: Record<Locale, string> = {
     en: "en_AE",
