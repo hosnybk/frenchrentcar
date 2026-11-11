@@ -5,7 +5,7 @@ import { FormEvent, useEffect, useMemo, useRef, useState } from "react";
 import { company } from "@/config/company";
 import { todayInDubai } from "@/lib/dates";
 import { Locale, translate } from "@/lib/translations";
-import { companyLegalName, privacyFr, termsFr } from "@/lib/legal-content";
+import { companyLegalName, companyLegalNameAr, privacyFr, termsFr, tradeLicense } from "@/lib/legal-content";
 import { vehicles } from "@/lib/vehicles";
 import { vehicleCategory } from "@/lib/vehicle-copy";
 
@@ -545,22 +545,91 @@ export function LegalPage({
       </>
     );
   }
-  const pending = locale === "fr"
-    ? "Le contenu de cette page est en cours de mise à jour. Pour toute question, contactez-nous."
-    : locale === "ar"
-      ? "محتوى هذه الصفحة قيد التحديث. لأي استفسار، تواصل معنا."
-      : "The content of this page is being updated. For any question, please contact us.";
+  return <LegalNotice locale={locale} />;
+}
+
+const legalNoticeCopy = {
+  fr: {
+    intro: "Informations relatives à l’éditeur et à l’hébergeur du site.",
+    publisher: "Éditeur du site",
+    companyName: "Raison sociale",
+    address: "Adresse",
+    license: "Licence commerciale",
+    contact: "Contact",
+    email: "E-mail",
+    hosting: "Hébergement",
+    documents: "Documents",
+    documentsBody: "L’utilisation du site et des services est régie par nos",
+    and: "et notre",
+  },
+  en: {
+    intro: "Information about the publisher and the host of this website.",
+    publisher: "Website publisher",
+    companyName: "Company name",
+    address: "Address",
+    license: "Trade licence",
+    contact: "Contact",
+    email: "E-mail",
+    hosting: "Hosting",
+    documents: "Documents",
+    documentsBody: "Use of the website and services is governed by our",
+    and: "and our",
+  },
+  ar: {
+    intro: "معلومات عن ناشر الموقع والجهة المستضيفة له.",
+    publisher: "ناشر الموقع",
+    companyName: "اسم الشركة",
+    address: "العنوان",
+    license: "الرخصة التجارية",
+    contact: "التواصل",
+    email: "البريد الإلكتروني",
+    hosting: "الاستضافة",
+    documents: "المستندات",
+    documentsBody: "يخضع استخدام الموقع والخدمات إلى",
+    and: "و",
+  },
+} as const;
+
+function LegalNotice({ locale }: { locale: Locale }) {
+  const t = legalNoticeCopy[locale];
+  const whatsappDigits = company.whatsappNumber.replace(/\D/g, "");
+  const hasAddress = company.address.trim() !== "" && company.address !== "TO_BE_CONFIRMED";
   return (
     <>
-      <PageIntro
-        eyebrow="FRENCH RENT CAR / DUBAI"
-        title={translate(locale, titleKey)}
-        body={pending}
-      />
-      <section className="page-wrap legal-placeholder">
-        <p>{pending}</p>
-        <a className="text-link" href={`/${locale}/contact`}>{translate(locale, "navContact")} ↗</a>
-      </section>
+      <PageIntro eyebrow={companyLegalName} title={translate(locale, "legalTitle")} body={t.intro} />
+      <article className="page-wrap legal-document">
+        <section>
+          <h2>{t.publisher}</h2>
+          <ul>
+            <li>{t.companyName} : {companyLegalName} · <span lang="ar" dir="rtl">{companyLegalNameAr}</span></li>
+            {hasAddress && <li>{t.address} : <span dir="auto">{company.address}</span></li>}
+            {tradeLicense && <li>{t.license} : {tradeLicense}</li>}
+          </ul>
+        </section>
+        <section>
+          <h2>{t.contact}</h2>
+          <ul>
+            {company.email.includes("@") && (
+              <li>{t.email} : <a href={`mailto:${company.email}`} dir="ltr">{company.email}</a></li>
+            )}
+            {whatsappDigits && (
+              <li>WhatsApp : <a href={`https://wa.me/${whatsappDigits}`} target="_blank" rel="noreferrer" dir="ltr">+{whatsappDigits}</a></li>
+            )}
+          </ul>
+        </section>
+        <section>
+          <h2>{t.hosting}</h2>
+          <p dir="ltr">Vercel Inc. · 440 N Barranca Ave #4133, Covina, CA 91723, USA · vercel.com</p>
+        </section>
+        <section>
+          <h2>{t.documents}</h2>
+          <p>
+            {t.documentsBody}{" "}
+            <a href={`/${locale}/terms`}>{translate(locale, "termsTitle")}</a> {t.and}{" "}
+            <a href={`/${locale}/privacy`}>{translate(locale, "privacyTitle")}</a>.
+          </p>
+        </section>
+      </article>
     </>
   );
 }

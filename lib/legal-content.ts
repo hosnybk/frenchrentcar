@@ -16,6 +16,12 @@ export type LegalDocument = {
 
 export const companyLegalName = "FRENCH FOR CAR RENTAL CO.";
 
+/** Arabic business name, as shown on the trade licence receipt. */
+export const companyLegalNameAr = "شركة فرنسية لتأجير السيارات";
+
+/** Trade licence number (from the licence renewal receipt of 04/11/2025). Hidden when empty. */
+export const tradeLicense = "1262826";
+
 export const privacyFr: LegalDocument = {
   title: "Politique de confidentialité",
   blocks: [
